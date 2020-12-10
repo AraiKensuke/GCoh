@@ -1,0 +1,14 @@
+#!/bin/bash
+
+export PYTHONPATH=${PYTHONPATH}:/Users/arai/DEV/sumojam
+
+#sub_sess=("aaffect_011" "aaffect_012" "aaffect_013" "aaffect_016" "aaffect_021" "aaffect_022" "aaffect_023" "aaffect_026" "aaffect_031" "aaffect_032" "aaffect_033" "aaffect_036" "aaffect_041" "aaffect_042" "aaffect_043" "aaffect_046" "aaffect_051" "aaffect_052" "aaffect_053" "aaffect_056")
+#sub_sess=("aaffect_061" "aaffect_062" "aaffect_063")
+#sub_sess=("aaffect_061" "aaffect_062" "aaffect_063")
+
+sub_sess=("Jan012019_02_00_00" "Jan012019_03_00_00" "Jan012019_04_00_00" "Jan012019_05_00_00" "Jan012019_06_00_00" "Jan012019_07_00_00" "Jan012019_08_00_00" "Jan012019_09_00_00" "Jan012019_10_00_00" "Jan012019_11_00_00" "Jan012019_12_00_00" "Jan012019_13_00_00" "Jan012019_14_00_00" "Jan012019_15_00_00")
+
+for subsess in ${sub_sess[@]}; do
+    python gc_ali.py eeg_date_time=${subsess}
+done
+                                                                                       
