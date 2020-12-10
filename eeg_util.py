@@ -3,7 +3,11 @@ import os
 from sklearn import mixture
 from sklearn.decomposition import PCA
 
-from AIiRPS.utils.dir_util import getResultFN
+from GCoh.datconfig import getResultFN
+import GCoh.datconfig as datconf
+
+
+#from AIiRPS.utils.dir_util import getResultFN
 
 def cut_zero_ends(y):
     where1 = _N.where(y == 1)[0]
@@ -135,7 +139,7 @@ def shift_correlated_shuffle(arr, low=1, high=5, local_shuffle=False, local_shuf
             
     return arr_shuffled
 
-def find_or_retrieve_GMM_labels(rpsm_key, eeg_date, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95):
+def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95):
     ###############
     minK    = _N.min(try_K)
     maxK    = _N.max(try_K)
@@ -143,12 +147,12 @@ def find_or_retrieve_GMM_labels(rpsm_key, eeg_date, real_evs, iL, iH, fL, fH, ar
     bics = _N.ones(((maxK-minK), _N.max(TRs)))*1000000
     labs = _N.empty((maxK-minK, _N.max(TRs), real_evs.shape[0]), dtype=_N.int)
 
-    outdir = getResultFN("%(rpsm)s/v%(av)d%(gv)d" % {"rpsm" : rpsm_key, "w" : which, "av" : armv_ver, "gv" : gcoh_ver})
+    outdir = datconf.getResultFN(dataset, "%(rpsm)s/v%(av)d%(gv)d" % {"rpsm" : eeg_date, "w" : which, "av" : armv_ver, "gv" : gcoh_ver})
 
     if not os.access(outdir, os.F_OK):
         os.mkdir(outdir)
 
-    fn = "%(od)s/%(eeg)s_%(fL)d-%(fH)d_GMM_labels%(w)d" % {"od" : outdir, "eeg" : eeg_date, "w" : which, "fL" : fL, "fH" : fH}
+    fn = "%(od)s/%(eeg)s_%(fL)d-%(fH)d_GMM_labels%(w)d" % {"od" : outdir, "eeg" : eeg_gcoh_name, "w" : which, "fL" : fL, "fH" : fH}
 
     _features = _N.sum(real_evs[:, iL:iH], axis=1)
     if do_pca:

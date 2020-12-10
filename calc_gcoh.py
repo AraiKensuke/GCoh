@@ -45,7 +45,7 @@ process_keyval_args(globals(), sys.argv[1:])
 wnd, wnd_mov      = preprocess_ver.get_win_slideby(gcoh_ver)
 hf_wnd  = wnd//2
 
-ch_w_CM, rm_chs, ch_names, ch_types, datdir = datconf.getConfig(dataset, sim_nchs=10)
+ch_w_CM, rm_chs, ch_names, ch_types = datconf.getConfig(dataset, sim_nchs=10)
 
 print(dataset)
 X_cm    = _N.loadtxt(datconf.getDataFN(dataset, "%(edt)s_artfctrmvd/v%(av)d/%(edt)s_artfctrmvd_v%(av)d.dat" % {"edt" : eeg_date_time, "av" : artrmv_ver}))

@@ -1,7 +1,8 @@
 import mne
 import numpy as _N
 
-resultDir     = "/Users/arai/nctc/Workspace/AIiRPS_Results"
+RPS_resultDir     = "/Users/arai/nctc/Workspace/AIiRPS_Results"
+SIM_resultDir     = "/Users/arai/nctc/Workspace/gcohsim_results"
 dataDirBase   = "/Users/arai/nctc/Workspace"
 
 _RPS        = 1
@@ -53,9 +54,8 @@ def getConfig(dataset, sim_nchs=None):
         for nc in range(sim_nchs):
             ch_names.append("ch%d" % (nc+1))
         ch_types=["eeg"] * sim_nchs
-        datdir = "simEEG_dat"
 
-    return ch_w_CM, rm_chs, ch_names, ch_types, datdir
+    return ch_w_CM, rm_chs, ch_names, ch_types
 
 def set_montage(dataset, info):
     if dataset == _RPS or dataset == _STROOP:
@@ -65,9 +65,12 @@ def set_montage(dataset, info):
     elif dataset == _AAFFECT:
         info.set_montage("standard_1020")
 
-def getResultFN(fn):
-    global resultDir
-    return "%(rd)s/%(fn)s" % {"rd" : resultDir, "fn" : fn}
+def getResultFN(dataset, fn):
+    global RPS_resultDir, SIM_resultDir
+    if dataset==_RPS:
+        return "%(bd)s/%(fn)s" % {"bd" : RPS_resultDir, "fn" : fn}
+    elif dataset==_SIM:
+        return "%(bd)s/%(fn)s" % {"bd" : SIM_resultDir, "fn" : fn}
 
 def getDataFN(dataset, fn):
     global dataDirBase
