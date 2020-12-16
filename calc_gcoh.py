@@ -7,7 +7,7 @@ import os
 import sys
 
 from sumojam.devscripts.cmdlineargs import process_keyval_args
-import GCoh.chronux_py.chronux_funcs as _chrf
+import windowedGCoh.chronux_py.chronux_funcs as _chrf
 import preprocess_ver
 
 import GCoh.datconfig as datconf
