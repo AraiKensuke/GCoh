@@ -5,7 +5,7 @@ import matplotlib.pyplot as _plt
 from scipy.signal import savgol_filter
 from sklearn import mixture
 from GCoh.eeg_util import unique_in_order_of_appearance, increasing_labels_mapping, rmpd_lab_trnsfrm, find_or_retrieve_GMM_labels, shift_correlated_shuffle, mtfftc
-#import skull_plot as _sp
+import GCoh.skull_plot as _sp
 import os
 import AIiRPS.rpsms as rpsms
 import GCoh.preprocess_ver as _ppv
@@ -55,7 +55,7 @@ arr_ch_names = _N.array(list_ch_names)
 #                        "T4"])
 
 ev_n   = 0
-ignore_stored = False
+
 
 _WIDE = 0
 _MED  = 1
@@ -66,7 +66,7 @@ _FINE1 = 3   #
 #dat     = "Apr112020_13_00_00"#"Apr312020_16_53_03"
 #dat     = "Apr242020_09_00_00"#"Apr312020_16_53_03"
 #dat     = "Apr242020_13_00_00"#"Apr312020_16_53_03"
-dat      = "Jan082020_17_03_48"
+#dat      = "Jan082020_17_03_48"
 #dat      = "Jan082020_16_56_08"
 #dat      = "Jan092020_14_55_38"
 #dat     = "Jan092020_14_00_00"#"Apr312020_16_53_03"
@@ -93,9 +93,12 @@ dat      = "Jan082020_17_03_48"
 #dat  = "Aug182020_13_57_26"
 #dat   = "Aug182020_15_45_27"
 #dat  = "Aug182020_16_44_18"
-#dat  = "Aug182020_16_25_28"
+dat  = "Aug182020_16_25_28"
 #dat  = "Jan012019_16_00_00"
 #dat="Dec102020_13_48_05"
+# dat="Dec102020_17_22_55"
+# dat="Dec102020_17_27_01"
+# dat="Dec102020_18_13_33"
 
 #bin     = 512
 #slide   = 64
@@ -106,8 +109,6 @@ manual_cluster=False
 armv_ver = 1
 gcoh_ver = 3   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
 
-#frngs = [[35, 47]]
-frngs = [[15, 25]]
 process_keyval_args(globals(), sys.argv[1:])
 win, slideby      = _ppv.get_win_slideby(gcoh_ver)
 
@@ -158,30 +159,35 @@ fs = lm["fs"]
 #frngs = [[12, 18], [20, 25], [28, 35], [38, 45]]
 #frngs = [[12, 18], [20, 25], [28, 35], [35, 42], [38, 45]]
 #frngs = [[10, 15]]
-#frngs = [[10, 15]]
+#frngs = [[10, 18]]
 #frngs = [[12, 18]]
 #frngs = [[10, 15], [20, 25], [30, 40]]
 #frngs = [[18, 25]]
+frngs = [[15, 25]]
 #frngs = [[35, 42]]
 
 #frngs = [[25, 35]]
 #frngs = [[43, 49]]
 #frngs = [[40, 50]]
-#frngs = [[35, 45]]
-#frngs = [[38, 45]]
-frngs = [[35, 47]]
+#frngs = [[30, 45]]
+#frngs = [[38, 50]]
+#frngs = [[32, 48]]
+#frngs = [[35, 47]]
 #frngs = [[8, 12], [12, 18]]
 #frngs = [[33, 40], [34, 41], [35, 42], [36, 43], [37, 44]]
 #frngs = [[12, 18], [18, 25], [25, 35], [35, 45]]
 #frngs = [[22, 28], [35, 42]]
 #frngs = [[28, 35], [38, 45]]
 
+ignore_stored = True
 pcs     = _N.empty(len(frngs))
-minK    = 6
-maxK    = 8
+minK    =11
+maxK    =12
+#minK = 6
+#maxK = 7
 try_Ks  = _N.arange(minK, maxK+1)
 #TRs      = _N.array([1, 1, 3, 5, 10, 15, 20, 25, 25])  # more tries for higher K
-TRs      = _N.array([1, 15, 20, 25, 25, 30, 40, 50, 60, 60, 60, 60, 60, 60, 60])  # more tries for higher K
+TRs      = _N.array([1, 15, 20, 25, 25, 30, 40, 50, 60, 60, 60, 60, 60, 60, 80, 80, 80, 80])  # more tries for higher K
 #TRs      = _N.array([60])  # more tries for higher K
 
 bics = _N.ones(((maxK-minK), _N.max(TRs)))*1000000
@@ -230,7 +236,7 @@ for ich in range(len(frngs)):
         iS += len(ls)
 
     iS = 0
-    clrs  = ["black", "orange", "blue", "green", "red", "lightblue", "grey", "pink", "yellow", "brown", "cyan", "purple", "black", "orange", "blue", "green", "red"]
+    clrs  = ["black", "orange", "blue", "green", "red", "lightblue", "grey", "pink", "yellow", "brown", "cyan", "purple", "black", "orange", "blue", "green", "red", "black", "orange", "blue", "green", "red", "lightblue", "grey", "pink", "yellow", "brown", "cyan", "purple", "black", "orange", "blue", "green", "red"]
     W   = L_gcoh
     H   = nChs
     disp_wh_ratio = 3
@@ -280,101 +286,70 @@ for ich in range(len(frngs)):
             _plt.axvline(x=iS, color="white", lw=1)
     fig.subplots_adjust(left=0.1, bottom=0.1, right=0.9, hspace=0.3)
 
-    #_plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_clusters_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "od" : outdir, "av" : armv_ver, "gv" : gcoh_ver, "evn" : ev_n}, transparent=True)
+    _plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_clusters_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "od" : outdir, "av" : armv_ver, "gv" : gcoh_ver, "evn" : ev_n}, transparent=True)
     #_plt.close()
 
-#     max_over_fs_each_state = _N.empty((nChs, nStates))
-#     for ns in range(nStates):
-#         ls = _N.where(rmpd_lab == ns)[0]
-#         mn_over_fs = _N.mean(real_evs[ls, iL:iH], axis=1)
-#         #min_all    = _N.min(mn_over_fs, axis=0)
-#         max_over_fs_each_state[:, ns]    = _N.max(mn_over_fs, axis=0)
-#     maxComp = _N.max(max_over_fs_each_state)
+    max_over_fs_each_state = _N.empty((nChs, nStates))
+    for ns in range(nStates):
+        ls = _N.where(rmpd_lab == ns)[0]
+        mn_over_fs = _N.mean(real_evs[ls, iL:iH], axis=1)
+        #min_all    = _N.min(mn_over_fs, axis=0)
+        max_over_fs_each_state[:, ns]    = _N.max(mn_over_fs, axis=0)
+    maxComp = _N.max(max_over_fs_each_state)
 
-#     all_vecs = _N.empty((nChs, nStates))
+    all_vecs = _N.empty((nChs, nStates))
     
-#     for ns in range(nStates):
-#         ls = _N.where(rmpd_lab == ns)[0]
-#         mn_over_fs = _N.mean(real_evs[ls, iL:iH], axis=1)
-#         min_all    = _N.min(mn_over_fs, axis=0)
-#         all_vecs[:, ns] = (min_all / maxComp)*1e-5
-#     _sp.do_skull_plot_all_EVs(all_vecs, ps, ch_names, "%(od)s/%(dat)s_%(w)d_%(sl)d_skull_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, dat, fL, fH)
+    for ns in range(nStates):
+        ls = _N.where(rmpd_lab == ns)[0]
+        mn_over_fs = _N.mean(real_evs[ls, iL:iH], axis=1)
+        min_all    = _N.min(mn_over_fs, axis=0)
+        all_vecs[:, ns] = (min_all / maxComp)*1e-5
+    _sp.do_skull_plot_all_EVs(all_vecs, ps, ch_names, "%(od)s/%(dat)s_%(w)d_%(sl)d_skull_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, dat, fL, fH)
 
-#     sts = _N.zeros(real_evs.shape[0])
-#     fig = _plt.figure(figsize=(12, 3))
+    sts = _N.zeros(real_evs.shape[0])
+    fig = _plt.figure(figsize=(12, 3))
 
-#     SHUFFLES = 100
-#     maxlags=150
-#     acfs     = _N.empty((SHUFFLES+1, maxlags*2+1))
-#     shf_rmpd_lab = _N.empty((SHUFFLES+1, rmpd_lab.shape[0]), dtype=_N.int)
-#     shf_rmpd_lab[0] = rmpd_lab
+    SHUFFLES = 100
+    maxlags=150
+    acfs     = _N.empty((SHUFFLES+1, maxlags*2+1))
+    shf_rmpd_lab = _N.empty((SHUFFLES+1, rmpd_lab.shape[0]), dtype=_N.int)
+    shf_rmpd_lab[0] = rmpd_lab
     
-#     for shf in range(1, SHUFFLES+1):
-#          rl = shift_correlated_shuffle(rmpd_lab, low=hlfOverlap, high=(hlfOverlap*3), local_shuffle=True, local_shuffle_pcs=6)
-#          #rl = shift_correlated_shuffle(rmpd_lab, low=1, high=2, local_shuffle=True, local_shuffle_pcs=6)
-#          shf_rmpd_lab[shf] = rl
+    for shf in range(1, SHUFFLES+1):
+         rl = shift_correlated_shuffle(rmpd_lab, low=hlfOverlap, high=(hlfOverlap*3), local_shuffle=True, local_shuffle_pcs=6)
+         #rl = shift_correlated_shuffle(rmpd_lab, low=1, high=2, local_shuffle=True, local_shuffle_pcs=6)
+         shf_rmpd_lab[shf] = rl
 
-#     for ns in range(nStates):
-#         _plt.subplot2grid((1, nStates), (0, ns))
+    for ns in range(nStates):
+        _plt.subplot2grid((1, nStates), (0, ns))
 
-#         for hlvs in range(2):
-#             t0 = hlvs*(L_gcoh//2)
-#             t1 = (hlvs+1)*(L_gcoh//2)
-#             for shf in range(SHUFFLES+1):
-#                 sts[:]=0
-#                 sts[_N.where(shf_rmpd_lab[shf] == ns)[0]] = 1
-#                 #_plt.acorr(sts - _N.mean(sts), maxlags=150, usevlines=False, ms=2, color=clr, lw=lw)
-#                 acfs[shf] = autocorrelate(sts[t0:t1] - _N.mean(sts[t0:t1]), maxlags)
-#                 acfs[shf, maxlags] = 0
-#             sACFS = _N.sort(acfs[1:], axis=0)
-#             _plt.plot(_N.arange(-maxlags, maxlags+1), acfs[0] + (1-hlvs)*0.7, color="black", lw=2)
-#             _plt.fill_between(_N.arange(-maxlags, maxlags+1), sACFS[int(SHUFFLES*0.025)] + 0.7*(1-hlvs), sACFS[int(SHUFFLES*0.975)] + 0.7*(1-hlvs), alpha=0.3, color="blue")
+        for hlvs in range(2):
+            t0 = hlvs*(L_gcoh//2)
+            t1 = (hlvs+1)*(L_gcoh//2)
+            for shf in range(SHUFFLES+1):
+                sts[:]=0
+                sts[_N.where(shf_rmpd_lab[shf] == ns)[0]] = 1
+                #_plt.acorr(sts - _N.mean(sts), maxlags=150, usevlines=False, ms=2, color=clr, lw=lw)
+                acfs[shf] = autocorrelate(sts[t0:t1] - _N.mean(sts[t0:t1]), maxlags)
+                acfs[shf, maxlags] = 0
+            sACFS = _N.sort(acfs[1:], axis=0)
+            _plt.plot(_N.arange(-maxlags, maxlags+1), acfs[0] + (1-hlvs)*0.7, color="black", lw=2)
+            _plt.fill_between(_N.arange(-maxlags, maxlags+1), sACFS[int(SHUFFLES*0.025)] + 0.7*(1-hlvs), sACFS[int(SHUFFLES*0.975)] + 0.7*(1-hlvs), alpha=0.3, color="blue")
 
-#             #_plt.xticks([-(Fs/slideby)*15, -(Fs/slideby)*10, -(Fs/slideby)*5, 0, (Fs/slideby)*5, (Fs/slideby)*10, (Fs/slideby)*15], [-15, -10, -5, 0, 5, 10, 15], fontsize=15)   #stroop
-#             #_plt.xticks([-(Fs/slideby)*45, -(Fs/slideby)*30, -(Fs/slideby)*15, 0, (Fs/slideby)*15, (Fs/slideby)*30, (Fs/slideby)*45], [-45, -30, -15, 0, 15, 30, 45], fontsize=15)   #RPS
-#             _plt.xticks([-(Fs/slideby)*30, -(Fs/slideby)*20, -(Fs/slideby)*10, 0, (Fs/slideby)*10, (Fs/slideby)*20, (Fs/slideby)*30], [-30, -20, -10, 0, 10, 20, 30], fontsize=15)   #RPS
-#             _plt.yticks(fontsize=14)
-#             #_plt.ylim(-0.08, 0.2)
-#             _plt.ylim(-0.08, 1.4)
-#             #_plt.xlim(-(Fs/slideby)*15, (Fs/slideby)*15)    #  Stroop
-#             #_plt.xlim(-(Fs/slideby)*50, (Fs/slideby)*50)    #  RPS
-#         _plt.xlim(-(Fs/slideby)*30, (Fs/slideby)*30)    #  RPS
-#         _plt.grid(ls=":")
-#         _plt.xlabel("lag (seconds)", fontsize=16)
-#         _plt.ylabel("autocorrelation", fontsize=16)
-#         _plt.title("pattern %d" % ns)
-#     _plt.suptitle("%(1)d-%(2)dHz" % {"1" : fL, "2" : fH})
-#     fig.subplots_adjust(left=0.15, bottom=0.2, wspace=0.4, right=0.98, top=0.9)
-#     _plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_acorr_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, transparent=True)
+            #_plt.xticks([-(Fs/slideby)*15, -(Fs/slideby)*10, -(Fs/slideby)*5, 0, (Fs/slideby)*5, (Fs/slideby)*10, (Fs/slideby)*15], [-15, -10, -5, 0, 5, 10, 15], fontsize=15)   #stroop
+            #_plt.xticks([-(Fs/slideby)*45, -(Fs/slideby)*30, -(Fs/slideby)*15, 0, (Fs/slideby)*15, (Fs/slideby)*30, (Fs/slideby)*45], [-45, -30, -15, 0, 15, 30, 45], fontsize=15)   #RPS
+            _plt.xticks([-(Fs/slideby)*30, -(Fs/slideby)*20, -(Fs/slideby)*10, 0, (Fs/slideby)*10, (Fs/slideby)*20, (Fs/slideby)*30], [-30, -20, -10, 0, 10, 20, 30], fontsize=15)   #RPS
+            _plt.yticks(fontsize=14)
+            #_plt.ylim(-0.08, 0.2)
+            _plt.ylim(-0.08, 1.4)
+            #_plt.xlim(-(Fs/slideby)*15, (Fs/slideby)*15)    #  Stroop
+            #_plt.xlim(-(Fs/slideby)*50, (Fs/slideby)*50)    #  RPS
+        _plt.xlim(-(Fs/slideby)*30, (Fs/slideby)*30)    #  RPS
+        _plt.grid(ls=":")
+        _plt.xlabel("lag (seconds)", fontsize=16)
+        _plt.ylabel("autocorrelation", fontsize=16)
+        _plt.title("pattern %d" % ns)
+    _plt.suptitle("%(1)d-%(2)dHz" % {"1" : fL, "2" : fH})
+    fig.subplots_adjust(left=0.15, bottom=0.2, wspace=0.4, right=0.98, top=0.9)
+    #_plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_acorr_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, transparent=True)
 
-# """
-#     ##############  temporary
-#     delays            = _N.array([1, -30])
-#     dat_tms_fn        = "%s_tms.dat" % dat
-    
-#     print("#############################################")
-#     print("dat:  %s" % dat)
-#     print("ev:   %d" % ev_n)
-#     print("fr:   %s" % str(frngs[ich]))
-#     dat_tms = _N.loadtxt("../Neurable/DSi_dat/%s" % dat_tms_fn, dtype=_N.int)
-    
-#     con     = _N.where(_N.where(dat_tms[:, 3] == 0)[0] > 62)[0]
-#     inc     = _N.where(_N.where(dat_tms[:, 3] == 1)[0] > 62)[0]
-    
-#     for dly in delays:
-#          print("dly: %d" % dly)
-#          start_con   = _N.array(dat_tms[con, 0]/64+dly, dtype=_N.int)   #  before con
-#          start_inc   = _N.array(dat_tms[inc, 0]/64+dly, dtype=_N.int)   #  before inc
-
-#          print("-----")
-#          for ns in range(nStates):
-#               ntms = len(_N.where(rmpd_lab[start_inc] == ns)[0])
-#               print("before inc, # of pattern %(n)3d  %(r).3f" % {"n" : ntms, "r" : (ntms / len(start_inc))})
-
-#          print("-----")
-#          for ns in range(nStates):
-#               ntms = len(_N.where(rmpd_lab[start_con] == ns)[0])   #  all trials
-#               print("before con, # of pattern %(n)3d  %(r).3f" % {"n" : ntms, "r" : (ntms / len(start_con))})
-
-
-# """

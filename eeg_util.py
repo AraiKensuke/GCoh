@@ -74,6 +74,45 @@ def increasing_labels_mapping(labs, startLab=0):
     labs_cpy -= maxLab + 1
     return labs_cpy
 
+def remap_label_by_similarity(nStates, labs, orig_features):
+    """
+    labs
+    """
+    #  first find means
+    mn = _N.zeros((nStates, orig_features.shape[1]))
+    for lb in range(nStates):
+        these = _N.where(labs == lb)[0]
+        mn[lb] = _N.mean(orig_features[these], axis=0)
+        mn[lb] /= _N.sum(mn[lb])
+
+    lb0 = 0
+    diff_mn = _N.zeros(nStates)
+    labels_left = nStates
+    
+    mapped  = _N.zeros(nStates, dtype=_N.int)
+    mapped[nStates - labels_left] = 0  #  12 10 
+
+    labels_left = nStates - 1
+    while labels_left > 0:
+        for lb in range(nStates):
+            diff_mn[lb] = _N.sum((mn[lb] - mn[lb0])*(mn[lb] - mn[lb0])) if lb != lb0 else 20000
+        closest = _N.where(diff_mn == _N.min(diff_mn))[0][0]
+        mn[closest] = _N.ones(orig_features.shape[1]) * 20000   # make it really far away
+
+        mapped[nStates - labels_left] = closest  #  12 10 
+        labels_left -= 1
+
+    new_labs = _N.zeros(labs.shape[0], dtype=_N.int)
+
+    #  mapped = [0, 4, 2, 5, 3, 1]
+    #  original 0 -> 0
+    #  original 4 -> 1
+    for i in range(1, nStates):
+        ths = _N.where(labs == mapped[i])[0]
+        new_labs[ths] = i
+    return new_labs
+    
+
 def rmpd_lab_trnsfrm(rmpd_lab, long):
     """
     """
@@ -139,14 +178,55 @@ def shift_correlated_shuffle(arr, low=1, high=5, local_shuffle=False, local_shuf
             
     return arr_shuffled
 
+def shuffle_discrete_contiguous_regions(arr, local_shuffle_pcs=10, local_shuffle=False):
+    #  cut into long pieces, then shuffle the pieces intact
+    arr_len = arr.shape[0]
+
+    piece_number = _N.empty(arr_len, dtype=_N.int)
+    
+    pc = 0
+
+    i0 = 0
+    i1 = 1
+    while (i1 < arr_len) and (arr[i0] == arr[i1]):
+        i1 += 1
+    
+    #i1 = _N.random.randint(low, high)
+    begInd     = []
+
+    while i0 < arr_len:
+        i1 = i1 if i1 < arr_len else arr_len
+        
+        begInd.append(i0)
+        piece_number[i0:i1] = pc
+        i0 = i1
+        while (i1 < arr_len) and (arr[i0] == arr[i1]):
+            i1 += 1
+        #i1 = i0+_N.random.randint(low, high)
+        pc += 1
+
+    use_pc = _N.arange(pc)
+    L = len(use_pc) // local_shuffle_pcs
+
+    if local_shuffle:
+        for i in range(local_shuffle_pcs):
+            _N.random.shuffle(use_pc[i*L:(i+1)*L])
+    else:
+        _N.random.shuffle(use_pc)
+    arr_shuffled = _N.empty(arr_len, dtype=arr.dtype)   #  new shuffled version of arr
+
+    ifilled = 0
+    for ipc in range(pc):
+        i = begInd[use_pc[ipc]]
+        while (i < arr_len) and (piece_number[i] == use_pc[ipc]):
+            arr_shuffled[ifilled] = arr[i]
+            ifilled += 1
+            i += 1
+            
+    return arr_shuffled
+
 def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95):
     ###############
-    minK    = _N.min(try_K)
-    maxK    = _N.max(try_K)
-
-    bics = _N.ones(((maxK-minK), _N.max(TRs)))*1000000
-    labs = _N.empty((maxK-minK, _N.max(TRs), real_evs.shape[0]), dtype=_N.int)
-
     outdir = datconf.getResultFN(dataset, "%(rpsm)s/v%(av)d%(gv)d" % {"rpsm" : eeg_date, "w" : which, "av" : armv_ver, "gv" : gcoh_ver})
 
     if not os.access(outdir, os.F_OK):
@@ -154,23 +234,31 @@ def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, 
 
     fn = "%(od)s/%(eeg)s_%(fL)d-%(fH)d_GMM_labels%(w)d" % {"od" : outdir, "eeg" : eeg_gcoh_name, "w" : which, "fL" : fL, "fH" : fH}
 
-    _features = _N.sum(real_evs[:, iL:iH], axis=1)
-    if do_pca:
-        pca = PCA()
-        pca.fit(_features)
 
-        proj = _N.einsum("ni,mi->nm", pca.components_, _features)
-        print(pca.explained_variance_ratio_)
-        maxC = _N.where(_N.cumsum(pca.explained_variance_ratio_) > min_var_expld)[0][0]
-        features = proj[0:maxC].T
-        print("Using %d features" % maxC)
-    else:
-        features = _features
     if os.access(fn, os.F_OK) and (not ignore_stored):
         rmpd_lab = _N.loadtxt(fn, dtype=_N.int)
         nStates  = len(_N.unique(rmpd_lab))
     else:
         print("doing GMM")
+        minK    = _N.min(try_K)
+        maxK    = _N.max(try_K)
+
+        bics = _N.ones(((maxK-minK), _N.max(TRs)))*1000000
+        labs = _N.empty((maxK-minK, _N.max(TRs), real_evs.shape[0]), dtype=_N.int)
+        _features = _N.mean(real_evs[:, iL:iH], axis=1)
+
+        if do_pca:
+            pca = PCA()
+            pca.fit(_features)
+            
+            proj = _N.einsum("ni,mi->nm", pca.components_, _features)
+            print(pca.explained_variance_ratio_)
+            maxC = _N.where(_N.cumsum(pca.explained_variance_ratio_) > min_var_expld)[0][0]
+            features = proj[0:maxC].T
+            print("Using %d features" % maxC)
+        else:
+            features = _features
+
         for K in range(minK, maxK):
             for tr in range(TRs[K]):
                 gmm = mixture.GaussianMixture(n_components=K, covariance_type="full")
@@ -180,13 +268,13 @@ def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, 
                 labs[K-minK, tr] = gmm.predict(features)
 
         coords = _N.where(bics == _N.min(bics))
-        print("min bic %.4e" % _N.min(bics))
         bestLab = labs[coords[0][0], coords[1][0]]   #  indices in 2-D array
-        rmpd_lab = increasing_labels_mapping(bestLab)
+        nStates =  list(range(minK, maxK))[coords[0][0]]
+
+        rmpd_lab = remap_label_by_similarity(nStates, bestLab, _features) # raw features
+        #rmpd_lab = increasing_labels_mapping(bestLab)
 
         _N.savetxt(fn, rmpd_lab, fmt="%d")
-
-        nStates =  list(range(minK, maxK))[coords[0][0]]
 
     print("manual_clustering   %s" % str(manual_cluster))
     if manual_cluster:
