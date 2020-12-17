@@ -236,7 +236,7 @@ def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, 
         fn = "%(od)s/%(eeg)s_%(fL)d-%(fH)d_GMM_labels%(w)d" % {"od" : outdir, "eeg" : eeg_gcoh_name, "w" : which, "fL" : fL, "fH" : fH}
 
 
-    if os.access(fn, os.F_OK) and (not ignore_stored):
+    if (not ignore_stored) and os.access(fn, os.F_OK):
         rmpd_lab = _N.loadtxt(fn, dtype=_N.int)
         nStates  = len(_N.unique(rmpd_lab))
     else:
