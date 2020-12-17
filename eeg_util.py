@@ -227,7 +227,7 @@ def shuffle_discrete_contiguous_regions(arr, local_shuffle_pcs=10, local_shuffle
 
 def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95, dontsave=False):
     ###############
-    if not donsave:
+    if not dontsave:
         outdir = datconf.getResultFN(dataset, "%(rpsm)s/v%(av)d%(gv)d" % {"rpsm" : eeg_date, "w" : which, "av" : armv_ver, "gv" : gcoh_ver})
 
         if not os.access(outdir, os.F_OK):
