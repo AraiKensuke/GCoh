@@ -1,5 +1,4 @@
 import numpy as _N
-import scipy.io as _scio
 import scipy.stats as _ss
 import matplotlib.pyplot as _plt
 from scipy.signal import savgol_filter

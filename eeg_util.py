@@ -225,14 +225,15 @@ def shuffle_discrete_contiguous_regions(arr, local_shuffle_pcs=10, local_shuffle
             
     return arr_shuffled
 
-def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95):
+def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95, dontsave=False):
     ###############
-    outdir = datconf.getResultFN(dataset, "%(rpsm)s/v%(av)d%(gv)d" % {"rpsm" : eeg_date, "w" : which, "av" : armv_ver, "gv" : gcoh_ver})
+    if not donsave:
+        outdir = datconf.getResultFN(dataset, "%(rpsm)s/v%(av)d%(gv)d" % {"rpsm" : eeg_date, "w" : which, "av" : armv_ver, "gv" : gcoh_ver})
 
-    if not os.access(outdir, os.F_OK):
-        os.mkdir(outdir)
+        if not os.access(outdir, os.F_OK):
+            os.mkdir(outdir)
 
-    fn = "%(od)s/%(eeg)s_%(fL)d-%(fH)d_GMM_labels%(w)d" % {"od" : outdir, "eeg" : eeg_gcoh_name, "w" : which, "fL" : fL, "fH" : fH}
+        fn = "%(od)s/%(eeg)s_%(fL)d-%(fH)d_GMM_labels%(w)d" % {"od" : outdir, "eeg" : eeg_gcoh_name, "w" : which, "fL" : fL, "fH" : fH}
 
 
     if os.access(fn, os.F_OK) and (not ignore_stored):
@@ -274,7 +275,8 @@ def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, 
         rmpd_lab = remap_label_by_similarity(nStates, bestLab, _features) # raw features
         #rmpd_lab = increasing_labels_mapping(bestLab)
 
-        _N.savetxt(fn, rmpd_lab, fmt="%d")
+        if not dontsave:
+            _N.savetxt(fn, rmpd_lab, fmt="%d")
 
     print("manual_clustering   %s" % str(manual_cluster))
     if manual_cluster:
