@@ -2,6 +2,7 @@ import mne
 import numpy as _N
 
 RPS_resultDir     = "/Users/arai/nctc/Workspace/AIiRPS_Results"
+STROOP_resultDir     = "/Users/arai/nctc/Workspace/Stroop_Results"
 SIM_resultDir     = "/Users/arai/nctc/Workspace/gcohsim_results"
 dataDirBase   = "/Users/arai/nctc/Workspace"
 
@@ -69,6 +70,8 @@ def getResultFN(dataset, fn):
     global RPS_resultDir, SIM_resultDir
     if dataset==_RPS:
         return "%(bd)s/%(fn)s" % {"bd" : RPS_resultDir, "fn" : fn}
+    elif dataset==_STROOP:
+        return "%(bd)s/%(fn)s" % {"bd" : STROOP_resultDir, "fn" : fn}
     elif dataset==_SIM:
         return "%(bd)s/%(fn)s" % {"bd" : SIM_resultDir, "fn" : fn}
 

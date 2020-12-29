@@ -29,6 +29,17 @@ def get_win_slideby(gcoh_ver):
     elif gcoh_ver == 10:
         win = 192
         slideby = 64
-
+    elif gcoh_ver == 11:
+        win = 192
+        slideby = 192
+    elif gcoh_ver == 12:
+        win = 256
+        slideby = 256
+    elif gcoh_ver == 13:
+        win = 384
+        slideby = 384
+    elif gcoh_ver == 14:
+        win = 256
+        slideby = 32
 
     return win, slideby

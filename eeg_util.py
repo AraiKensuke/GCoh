@@ -35,6 +35,7 @@ def break_at_gaps_01(y, meanISImult=20):
             if (en0 - st0 >= meanISImult*meanISI) and (st0 > 0):
                 gaps.append((en0+st0)//2)
     gaps.append(len(y))
+    print(gaps)
     return _N.array(gaps)
             
 
@@ -225,7 +226,7 @@ def shuffle_discrete_contiguous_regions(arr, local_shuffle_pcs=10, local_shuffle
             
     return arr_shuffled
 
-def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95, dontsave=False):
+def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=[1, 2, 3, 4, 5, 6, 7], TRs=[1, 2, 4, 8, 16, 32, 64], manual_cluster=False, ignore_stored=False, do_pca=False, min_var_expld=0.95, dontsave=False, Bayesian=False):
     ###############
     if not dontsave:
         outdir = datconf.getResultFN(dataset, "%(rpsm)s/v%(av)d%(gv)d" % {"rpsm" : eeg_date, "w" : which, "av" : armv_ver, "gv" : gcoh_ver})
@@ -260,22 +261,31 @@ def find_or_retrieve_GMM_labels(dataset, eeg_date, eeg_gcoh_name, real_evs, iL, 
         else:
             features = _features
 
-        for K in range(minK, maxK):
-            for tr in range(TRs[K]):
-                gmm = mixture.GaussianMixture(n_components=K, covariance_type="full")
+        if not Bayesian:
+            for K in range(minK, maxK):
+                for tr in range(TRs[K]):
+                    gmm = mixture.GaussianMixture(n_components=K, covariance_type="full")
 
-                gmm.fit(features)
-                bics[K-minK, tr] = gmm.bic(features)
-                labs[K-minK, tr] = gmm.predict(features)
+                    gmm.fit(features)
+                    bics[K-minK, tr] = gmm.bic(features)
+                    labs[K-minK, tr] = gmm.predict(features)
 
-        coords = _N.where(bics == _N.min(bics))
-        bestLab = labs[coords[0][0], coords[1][0]]   #  indices in 2-D array
-        nStates =  list(range(minK, maxK))[coords[0][0]]
+            coords = _N.where(bics == _N.min(bics))
+            bestLab = labs[coords[0][0], coords[1][0]]   #  indices in 2-D array
+            nStates =  list(range(minK, maxK))[coords[0][0]]
+            print("@!!!!! ")
+            print(coords)
+        else:
+            gmm = mixture.BayesianGaussianMixture(n_components=15, weight_concentration_prior_type="dirichlet_process", covariance_type="full")
+            gmm.fit(features)
+            bestLab = gmm.predict(features)
+            nStates = len(_N.unique(bestLab))
 
         rmpd_lab = remap_label_by_similarity(nStates, bestLab, _features) # raw features
         #rmpd_lab = increasing_labels_mapping(bestLab)
 
         if not dontsave:
+            print("saving!!!!!!!!!!!!!!!!  %s" % fn)
             _N.savetxt(fn, rmpd_lab, fmt="%d")
 
     print("manual_clustering   %s" % str(manual_cluster))
@@ -429,21 +439,32 @@ def autocorrelate_chunky_01s(_signal, maxlag):
     """
     #_signal
 
-    breaks = break_at_gaps_01(_signal, meanISImult=20)
+    breaks = break_at_gaps_01(_signal, meanISImult=10)
     pieces = len(breaks)-1
 
     AC = _N.empty((pieces, maxlag*2+1))
     signal = _N.array(_signal, dtype=_N.float)
 
     #weight by amount of data used to calculate autocorrelation
-    weights= _N.empty((pieces, 1))
+    weights= _N.ones((pieces, 1))
     for pc in range(pieces):
         strtInd = breaks[pc]
         endInd  = breaks[pc+1]
         
         st1, st2 = cut_zero_ends(_signal[strtInd:endInd])
+        # if pieces == 1:    #  compromise
+        #     if (st2 - st1 < 3*maxlag) and ((st1 >= 0) and (st2 >= 0)):
+        #         midp = int(0.5*(st2+st1))
+        #         st1 = strtInd + midp - int(1.6*maxlag)
+        #         st2 = strtInd + midp + int(1.6*maxlag)
+        #         if st1 < 0:
+        #             st2 -= st1
+        #             st1 = 0
+        #         if st2 > len(_signal):
+        #             st1 = st1 - (st2 - len(_signal))
+        #             st2 = len(_signal)
 
-        if st2 - st1 > 3*maxlag:
+        if (st2 - st1 > 3*maxlag) or ((pieces == 1) and (st2 - st1 > 2*maxlag)):
             weights[pc, 0] = st2 - st1
             sigN_cz = st2+1-st1
             signal[strtInd+st1:strtInd+st2+1] = _signal[strtInd+st1:strtInd+st2+1] - _N.mean(_signal[strtInd+st1:strtInd+st2+1])
