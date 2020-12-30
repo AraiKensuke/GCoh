@@ -33,7 +33,7 @@ def autocorrelate(signal, maxlag):
      AC[maxlag] = 1
      return AC
 
-dataset =    datconf._RPS
+dataset =    datconf._STROOP
 c    = 2
 if dataset == datconf._SIM:
     Fs   = 200
@@ -93,6 +93,7 @@ dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
 #dats   = ["Aug182020_15_45_27"]
 #dats  = ["Aug182020_16_44_18"]
 #dats  = ["Aug182020_16_25_28"]
+dats  = ["Jan012019_04_00_00"]
 # dats  = ["Jan012019_10_00_00", "Jan012019_11_00_00", 
 #          "Jan012019_12_00_00", "Jan012019_13_00_00",
 #          "Jan012019_14_00_00", "Jan012019_15_00_00",
@@ -112,19 +113,22 @@ _WIDE = 0
 _FINE = 1
 
 manual_cluster=False
-armv_ver = 4
-gcoh_ver = 10   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
+armv_ver = 1
+gcoh_ver = 14   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
 
 process_keyval_args(globals(), sys.argv[1:])
 win, slideby      = _ppv.get_win_slideby(gcoh_ver)
 
 hlfOverlap = int((win/slideby)*0.5)
 
+tr2tr      = True
+str2tr     = "_tr2tr" if tr2tr else ""
+
 for dat in dats:
      #s = "../Neurable/DSi_dat/%(dsf)s_artfctrmvd_v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"gf" : rpsm[dat], "dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : bin, "sld" : slide}
      #print("!!!!!!!!!!   %s" % s)
      #lm         = depickle("../DSi_dat/%(dsf)s_artfctrmvd/v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"gf" : rpsms.rpsm_eeg_as_key[dat], "dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby})
-     lm         = depickle(datconf.getDataFN(dataset, "%(dsf)s_artfctrmvd/v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby}))
+     lm         = depickle(datconf.getDataFN(dataset, "%(dsf)s_artfctrmvd/v%(av)d/%(dsf)s%(tr2tr)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "tr2tr" : str2tr}))
      # #lm         = depickle("../Neurable/DSi_dat/%(dat)s_gcoh_%(w)s_%(s)s.dmp" % {"dat" : dat, "w" : bin, "s" : slide})
      # #A_gcoh_mat = _scio.loadmat("DSi_dat/%(dat)s_gcoh_%(w)d_%(sl)d.mat" % {"dat" : dat, "w" : bin, "sl" : slide})
      # #A_gcoh     = A_gcoh_mat["Cs"]
@@ -213,7 +217,7 @@ for dat in dats:
          iH    = irngs[-1]    
 
          #Apr242020_16_53_03_gcoh_256_64
-         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=True, min_var_expld=0.99)
+         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s%(tr2tr)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n, "tr2tr" : str2tr}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=True, min_var_expld=0.99)
          ps = _N.arange(nStates)
          ps += nState_start
          nState_start += nStates
@@ -295,7 +299,7 @@ for dat in dats:
                  _plt.axvline(x=iS, color="white", lw=1)
          fig.subplots_adjust(left=0.1, bottom=0.1, right=0.9, hspace=0.3)
 
-         _plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_clusters_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "od" : outdir, "av" : armv_ver, "gv" : gcoh_ver, "evn" : ev_n}, transparent=True)
+         _plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_clusters%(tr2tr)s_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"tr2tr" : str2tr, "1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "od" : outdir, "av" : armv_ver, "gv" : gcoh_ver, "evn" : ev_n}, transparent=True)
          #_plt.close()
 
          max_over_fs_each_state = _N.empty((nChs, nStates))
@@ -313,7 +317,7 @@ for dat in dats:
              mn_over_fs = _N.mean(real_evs[ls, iL:iH], axis=1)
              min_all    = _N.min(mn_over_fs, axis=0)
              all_vecs[:, ns] = (min_all / maxComp)*1e-5
-         _sp.do_skull_plot_all_EVs(all_vecs, ps, ch_names, "%(od)s/%(dat)s_%(w)d_%(sl)d_skull_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, dat, fL, fH)
+         _sp.do_skull_plot_all_EVs(all_vecs, ps, ch_names, "%(od)s/%(dat)s_%(w)d_%(sl)d_skull%(tr2tr)s_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"tr2tr" : str2tr, "1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, dat, fL, fH)
 
          sts = _N.zeros(real_evs.shape[0])
          fig = _plt.figure(figsize=(12, 3))
