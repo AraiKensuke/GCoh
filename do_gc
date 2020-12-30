@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# for hr in "00" "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"; do
+#     python gc_ali.py eeg_date_time="Jan012019_${hr}_00_00"
+# done
+
+#for eeg_date_time in "Aug182020_15_45_27" "Aug182020_16_25_28" "Aug182020_16_44_18" "Jan082020_17_03_48"; do
+#    python gc_ali.py eeg_date_time=${eeg_date_time} gcoh_ver=4
+#done
+
+python gc_ali.py eeg_date_time="Jan092020_15_05_39" gcoh_ver=1 artrmv_ver=4
+python gc_ali.py eeg_date_time="Jan092020_15_05_39" gcoh_ver=2 artrmv_ver=4
+python gc_ali.py eeg_date_time="Jan092020_15_05_39" gcoh_ver=3 artrmv_ver=4
+python gc_ali.py eeg_date_time="Jan092020_15_05_39" gcoh_ver=4 artrmv_ver=4
+done
