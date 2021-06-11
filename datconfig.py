@@ -12,13 +12,16 @@ _GONOGO     = 3
 _AAFFECT    = 4
 _SIM        = 5
 
-def getConfig(dataset, sim_nchs=None):
+def getConfig(dataset, sim_nchs=None, cm=None):
     """
     if we want to run this on simulated data, sim_nchs sets # of EEG channels
     """
     if dataset == _RPS or dataset == _STROOP:
         ch_w_CM  =   _N.arange(21)
-        rm_chs   =  [8]
+        if cm is None:
+            rm_chs   =  [8]
+        else:  #  in cases where I DSi_ify
+            rm_chs   =  [cm]
         ch_names=["P3", "C3", "F3", "Fz", "F4",   
                   "C4", "P4", "Cz", "Pz", "A1",    #  "Pz" is "CM"
                   "Fp1","Fp2","T3", "T5", "O1",

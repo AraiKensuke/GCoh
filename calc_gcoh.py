@@ -14,7 +14,7 @@ import GCoh.datconfig as datconf
 import GCoh.windowed_gcoh as _w_gcoh
 #import GCoh.utils.dir_util as _du
 
-dataset =    datconf._STROOP
+dataset =    datconf._RPS
 c    = 2
 if dataset == datconf._SIM:
     Fs   = 200
@@ -33,7 +33,7 @@ elif dataset == datconf._AAFFECT:
 # eeg_date_time ="Aug182020_15_45_27"
 #eeg_date_time ="Aug182020_16_44_18"
 #eeg_date_time="Aug182020_16_25_28"
-# eeg_date_time="Dec102020_12_54_24"
+#eeg_date_time="Dec102020_12_54_24"
 # eeg_date_time="Dec102020_13_48_05"
 # #eeg_date_time= "Aug122020_13_30_23"
 # #eeg_date_time = "gonogo_0519"
@@ -42,26 +42,44 @@ elif dataset == datconf._AAFFECT:
 # eeg_date_time="Dec102020_17_27_01"
 # eeg_date_time="Dec102020_18_13_33"
 #eeg_date_time="Dec162020_16_10_00"
-eeg_date_times  = ["Jan012019_00_00_00", "Jan012019_01_00_00", 
-                   "Jan012019_02_00_00", "Jan012019_03_00_00", 
-                   "Jan012019_04_00_00", "Jan012019_05_00_00", 
-                   "Jan012019_06_00_00", "Jan012019_07_00_00", 
-                   "Jan012019_08_00_00", "Jan012019_09_00_00", 
-                   "Jan012019_12_00_00", "Jan012019_13_00_00",
-                   "Jan012019_14_00_00", "Jan012019_15_00_00"]
 
+# eeg_date_times  = ["Jan012019_00_00_00", "Jan012019_01_00_00", 
+#                    "Jan012019_02_00_00", "Jan012019_03_00_00", 
+#                    "Jan012019_04_00_00", "Jan012019_05_00_00", 
+#                    "Jan012019_06_00_00", "Jan012019_07_00_00", 
+#                    "Jan012019_08_00_00", "Jan012019_09_00_00", 
+#                    "Jan012019_12_00_00", "Jan012019_13_00_00",
+#                    "Jan012019_14_00_00", "Jan012019_15_00_00"]
+
+#eeg_date_times = ["Jan092020_15_05_39"]
+#eeg_date_times = ["May262021_13_18_41"]
+#eeg_date_times = ["May262021_14_06_30"]
+eeg_date_times = ["May262021_14_37_19"]
+#eeg_date_times = ["May262021_15_05_54"]
+#eeg_date_times = ["Jun092021_12_31_51"]
+#eeg_date_times  = ["Jun092021_12_54_23"]
+#eeg_date_times = ["Jun092021_15_22_58"]
+# eeg_date_times = ["Jun092021_12_42_00"]
+# eeg_date_times = ["Jun092021_13_06_34"]
+# eeg_date_times = ["Jun092021_18_09_37"]
+# eeg_date_times = ["Jun092021_15_35_22"]
+#eeg_date_times  = ["Jun092021_17_57_45"]
+#eeg_date_times  = ["Jun092021_13_27_01"]
 artrmv_ver = 1
-gcoh_ver    = 3
+gcoh_ver    = 2
 
 process_keyval_args(globals(), sys.argv[1:])
 
 wnd, slideby      = preprocess_ver.get_win_slideby(gcoh_ver)
 
-ch_w_CM, rm_chs, ch_names, ch_types = datconf.getConfig(dataset, sim_nchs=10)
+cm    = 9
+#cm    = None
+ch_w_CM, rm_chs, ch_names, ch_types = datconf.getConfig(dataset, sim_nchs=10, cm=cm)
 
 for eeg_date_time in eeg_date_times:
     ####  load EEG data
     X_cm    = _N.loadtxt(datconf.getDataFN(dataset, "%(edt)s_artfctrmvd/v%(av)d/%(edt)s_artfctrmvd_v%(av)d.dat" % {"edt" : eeg_date_time, "av" : artrmv_ver}))
+    X_cm 
 
     if os.access(datconf.getDataFN(dataset, "%(edt)s_artfctrmvd/v%(v)d/bad_chs.dat" % {"edt" : eeg_date_time, "v" : artrmv_ver}), os.F_OK):
         ####  find channels identified as bad

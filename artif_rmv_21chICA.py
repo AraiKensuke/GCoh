@@ -2,7 +2,7 @@ import os
 import numpy as _N
 import matplotlib.pyplot as _plt
 from scipy.signal import hilbert
-import read_taisen as _rt
+#import read_taisen as _rt
 import scipy.stats as _ss
 from mne.preprocessing.ica import corrmap  # noqa
 from mne.preprocessing import ICA
@@ -72,12 +72,27 @@ fname= "Apr242020_16_53_03"   #  35 seconds    #  15:04:32
 #fname="Aug182020_16_44_18"
 #fname= "Aug122020_13_30_23"
 #fname= "Jul042020_12_00_00"
-fname= "Jan012019_15_00_00"
+#fname= "Jan012019_15_00_00"
+#fname= "May262021_13_18_41"
+#fname= "May262021_13_18_43"
+fname= "May262021_14_06_30"
+fname= "May262021_14_37_19"
+#fname= "May262021_14_37_22"
+#fname= "May262021_15_05_54"
+#fname= "Jun092021_12_31_51"
+# fname= "Jun092021_12_54_23"
+# fname= "Jun092021_17_57_45"
+# fname= "Jun092021_15_22_58"
+# fname= "Jun092021_12_42_00"
+# fname= "Jun092021_13_06_34"
+# fname= "Jun092021_18_09_37"
+# fname= "Jun092021_15_35_22"
+# fname= "Jun092021_13_27_01"
 
 #fname= "TTtest"   #  35 seconds    #  15:04:32  
 
 armv_ver = 1
-artRmvDir = "DSi_dat/%(fn)s_artfctrmvd" % {"fn" : fname, "av" : armv_ver}
+artRmvDir = "../DSi_dat/%(fn)s_artfctrmvd" % {"fn" : fname, "av" : armv_ver}
 if not os.access(artRmvDir, os.F_OK):
     os.mkdir(artRmvDir)
 artRmvDir = "%(dir)s/v%(av)d" % {"dir" : artRmvDir, "av" : armv_ver}
@@ -86,18 +101,24 @@ if not os.access(artRmvDir, os.F_OK):
 
 #######################################################################
 #######################################################################
-dAll  = _N.genfromtxt("DSi_dat/%s.csv" % fname, delimiter=',')
+#edf  = mne.io.read_raw_edf("../DSi_dat/%s.edf" % fname)
+#dAll = edf.get_data().T*10000
+#dAll  = _N.genfromtxt("DSi_dat/%s.csv" % fname, delimiter=',')
+dAll  = _N.loadtxt("Q20_dat/%s.csv" % fname)
+#dAll /= 100000
 
 Fs  = 300
 
 #####   All other days except Jul012020_12_00_00
-chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) + 1
+chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) + 1   # .csv 
+#chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) # edf
 #chs = _N.arange(21)
 
 d   = _N.array(dAll[:, chs])
+#d[:, 9] = _N.random.randn(dAll.shape[0])
 
 ch_names = ["P3", "C3", "F3", "Fz","F4", "C4", "P4", "Cz", "Pz", "M1", "Fp1", "Fp2", "T3", "T5", "O1", "O2", "F7", "F8", "M2", "T6", "T4"]
-bad_chs21 = None
+bad_chs21 = []
 
 bad_chs_inds = None
 orig_dat = None

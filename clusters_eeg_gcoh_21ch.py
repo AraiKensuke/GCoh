@@ -7,9 +7,9 @@ from sklearn import mixture
 from GCoh.eeg_util import unique_in_order_of_appearance, increasing_labels_mapping, rmpd_lab_trnsfrm, find_or_retrieve_GMM_labels, shift_correlated_shuffle, mtfftc
 import skull_plot as _sp
 import os
-import AIiRPS.rpsms as rpsms
+#import AIiRPS.rpsms as rpsms
 import GCoh.preprocess_ver as _ppv
-from AIiRPS.utils.dir_util import getResultFN
+#from AIiRPS.utils.dir_util import getResultFN
 
 
 import sys
@@ -83,6 +83,7 @@ dat      = "Jan082020_17_03_48"
 #dat  = "Aug182020_16_44_18"
 #dat  = "Aug182020_16_25_28"
 #dat  = "Jan012019_16_00_00"
+dat = "May262021_13_18_41"
 
 #bin     = 512
 #slide   = 64
@@ -104,7 +105,7 @@ hlfOverlap = int((win/slideby)*0.5)
 
 #s = "../Neurable/DSi_dat/%(dsf)s_artfctrmvd_v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"gf" : rpsm[dat], "dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : bin, "sld" : slide}
 #print("!!!!!!!!!!   %s" % s)
-lm         = depickle("../DSi_dat/%(dsf)s_artfctrmvd/v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"gf" : rpsms.rpsm_eeg_as_key[dat], "dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby})
+lm         = depickle("../DSi_dat/%(dsf)s_artfctrmvd/v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby})
 # #lm         = depickle("../Neurable/DSi_dat/%(dat)s_gcoh_%(w)s_%(s)s.dmp" % {"dat" : dat, "w" : bin, "s" : slide})
 # #A_gcoh_mat = _scio.loadmat("DSi_dat/%(dat)s_gcoh_%(w)d_%(sl)d.mat" % {"dat" : dat, "w" : bin, "sl" : slide})
 # #A_gcoh     = A_gcoh_mat["Cs"]
@@ -114,9 +115,10 @@ A_gcoh     = lm["Cs"][strt:]
 n_fs       = lm["fs"]
 
 
-outdir     = getResultFN("%(dir)s/v%(av)d%(gv)d" % {"dir" : dat, "av" : armv_ver, "gv" : gcoh_ver})
-if not os.access(getResultFN(dat), os.F_OK):
-     os.mkdir(getResultFN(dat))
+#outdir     = getResultFN("%(dir)s/v%(av)d%(gv)d" % {"dir" : dat, "av" : armv_ver, "gv" : gcoh_ver})
+outdir     = "."
+#if not os.access(getResultFN(dat), os.F_OK):
+#     os.mkdir(getResultFN(dat))
 ################  egenvectors
 #imag_evs  = A_gcoh_mat["VEC"][0]
 

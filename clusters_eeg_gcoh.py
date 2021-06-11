@@ -6,7 +6,7 @@ from sklearn import mixture
 from GCoh.eeg_util import unique_in_order_of_appearance, increasing_labels_mapping, rmpd_lab_trnsfrm, find_or_retrieve_GMM_labels, shift_correlated_shuffle, mtfftc
 import GCoh.skull_plot as _sp
 import os
-import AIiRPS.rpsms as rpsms
+#import AIiRPS.rpsms as rpsms
 import GCoh.preprocess_ver as _ppv
 #from AIiRPS.utils.dir_util import getResultFN
 import GCoh.datconfig as datconf
@@ -33,7 +33,7 @@ def autocorrelate(signal, maxlag):
      AC[maxlag] = 1
      return AC
 
-dataset =    datconf._STROOP
+dataset =    datconf._RPS
 c    = 2
 if dataset == datconf._SIM:
     Fs   = 200
@@ -44,7 +44,7 @@ elif dataset == datconf._GONOGO:
 elif dataset == datconf._AAFFECT:
     Fs   = 500
 
-ch_w_CM, rm_chs, list_ch_names, ch_types = datconf.getConfig(dataset, sim_nchs=10)
+ch_w_CM, rm_chs, list_ch_names, ch_types = datconf.getConfig(dataset, sim_nchs=10, cm=9)
 arr_ch_names = _N.array(list_ch_names)
 
 # arr_ch_names=_N.array(["P3", "C3", "F3", "Fz", "F4",   
@@ -69,7 +69,7 @@ _FINE1 = 3   #
 #dat      = "Jan082020_16_56_08"
 #dat      = "Jan092020_14_55_38"
 #dat     = "Jan092020_14_00_00"#"Apr312020_16_53_03"
-dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
+#dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
 #dat     = "May042020_22_23_04"#"Apr312020_16_53_03"
 #dat     = "May052020_13_00_00"#"Apr312020_16_53_03"
 #dat     = "May052020_21_08_01"
@@ -93,7 +93,29 @@ dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
 #dats   = ["Aug182020_15_45_27"]
 #dats  = ["Aug182020_16_44_18"]
 #dats  = ["Aug182020_16_25_28"]
-dats  = ["Jan012019_04_00_00"]
+#dats  = ["Jan012019_04_00_00"]
+#dats = ["May262021_13_18_43"]
+#dats = ["May262021_15_05_54"]
+#######
+#dats = ["Jun092021_12_31_51"]
+#dats = ["Jun092021_12_42_00"]
+
+#######
+#dats = ["Jun092021_12_54_23"]
+#dats = ["Jun092021_13_06_34"]
+#######
+#dats= ["Jun092021_15_22_58"]
+#dats= ["Jun092021_15_35_22"]
+
+#dats  = ["Jun092021_13_27_01"]
+#######
+#dats = ["Jun092021_17_57_45"]
+#dats=["Jun092021_18_09_37"]
+#dats=["May262021_14_06_30"]
+dats=["May262021_14_37_19"]
+#dats = ["May262021_13_18_41"]
+
+
 # dats  = ["Jan012019_10_00_00", "Jan012019_11_00_00", 
 #          "Jan012019_12_00_00", "Jan012019_13_00_00",
 #          "Jan012019_14_00_00", "Jan012019_15_00_00",
@@ -114,14 +136,14 @@ _FINE = 1
 
 manual_cluster=False
 armv_ver = 1
-gcoh_ver = 14   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
+gcoh_ver = 2   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
 
 process_keyval_args(globals(), sys.argv[1:])
 win, slideby      = _ppv.get_win_slideby(gcoh_ver)
 
 hlfOverlap = int((win/slideby)*0.5)
 
-tr2tr      = True
+tr2tr      = False
 str2tr     = "_tr2tr" if tr2tr else ""
 
 for dat in dats:
@@ -129,6 +151,9 @@ for dat in dats:
      #print("!!!!!!!!!!   %s" % s)
      #lm         = depickle("../DSi_dat/%(dsf)s_artfctrmvd/v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"gf" : rpsms.rpsm_eeg_as_key[dat], "dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby})
      lm         = depickle(datconf.getDataFN(dataset, "%(dsf)s_artfctrmvd/v%(av)d/%(dsf)s%(tr2tr)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "tr2tr" : str2tr}))
+
+
+     
      # #lm         = depickle("../Neurable/DSi_dat/%(dat)s_gcoh_%(w)s_%(s)s.dmp" % {"dat" : dat, "w" : bin, "s" : slide})
      # #A_gcoh_mat = _scio.loadmat("DSi_dat/%(dat)s_gcoh_%(w)d_%(sl)d.mat" % {"dat" : dat, "w" : bin, "sl" : slide})
      # #A_gcoh     = A_gcoh_mat["Cs"]
@@ -167,34 +192,12 @@ for dat in dats:
      fs = lm["fs"]
 
 
-     #frngs = [[12, 18], [20, 25], [28, 35], [38, 45]]
-     #frngs = [[12, 18], [20, 25], [28, 35], [35, 42], [38, 45]]
-     #frngs = [[10, 15]]
-     #frngs = [[10, 18]]
-     #frngs = [[12, 18]]
-     #frngs = [[10, 15], [20, 25], [30, 40]]
-     #frngs = [[18, 25]]
-     #frngs = [[22, 30]]
-     #frngs = [[15, 25]]
-     #frngs = [[35, 42]]
-
-     #frngs = [[30, 40]]
-     #frngs = [[43, 49]]
-     #frngs = [[40, 50]]
-     #frngs = [[30, 45]]
-     #frngs = [[38, 45]]
-     #frngs = [[32, 48]]
-#     frngs = [[35, 47]]
+     #frngs = [[7, 15]]
      frngs = [[32, 48]]
-     #frngs = [[8, 12], [12, 18]]
-     #frngs = [[33, 40], [34, 41], [35, 42], [36, 43], [37, 44]]
-     #frngs = [[12, 18], [18, 25], [25, 35], [35, 45]]
-     #frngs = [[22, 28], [35, 42]]
-     #frngs = [[28, 35], [38, 45]]
 
      ignore_stored = True
      pcs     = _N.empty(len(frngs))
-     minK    =10
+     minK    =1
      maxK = 12
      try_Ks  = _N.arange(minK, maxK+1)
      #TRs      = _N.array([1, 1, 3, 5, 10, 15, 20, 25, 25])  # more tries for higher K
@@ -217,7 +220,7 @@ for dat in dats:
          iH    = irngs[-1]    
 
          #Apr242020_16_53_03_gcoh_256_64
-         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s%(tr2tr)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n, "tr2tr" : str2tr}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=True, min_var_expld=0.99)
+         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s%(tr2tr)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n, "tr2tr" : str2tr}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=False, min_var_expld=0.95)
          ps = _N.arange(nStates)
          ps += nState_start
          nState_start += nStates
@@ -320,7 +323,7 @@ for dat in dats:
          _sp.do_skull_plot_all_EVs(all_vecs, ps, ch_names, "%(od)s/%(dat)s_%(w)d_%(sl)d_skull%(tr2tr)s_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"tr2tr" : str2tr, "1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, dat, fL, fH)
 
          sts = _N.zeros(real_evs.shape[0])
-         fig = _plt.figure(figsize=(12, 3))
+         fig = _plt.figure(figsize=(12, 9))
 
          SHUFFLES = 100
          maxlags=150
@@ -336,10 +339,12 @@ for dat in dats:
               #rl = shift_correlated_shuffle(rmpd_lab, low=1, high=2, local_shuffle=True, local_shuffle_pcs=6)
               shf_rmpd_lab[shf] = rl
 
+         disp_rows = int(_N.ceil(nStates/3))
          for ns in range(nStates):
-             _plt.subplot2grid((1, nStates), (0, ns))
+             #_plt.subplot2grid((3, nStates//3), (0, ns))
+             fig.add_subplot(disp_rows, 3, ns+1)
 
-             for hlvs in range(2):
+             for hlvs in range(1):
                  t0 = hlvs*(L_gcoh//2)
                  t1 = (hlvs+1)*(L_gcoh//2)
                  for shf in range(SHUFFLES+1):
@@ -367,5 +372,5 @@ for dat in dats:
              _plt.title("pattern %d" % ns)
          _plt.suptitle("%(1)d-%(2)dHz" % {"1" : fL, "2" : fH})
          fig.subplots_adjust(left=0.15, bottom=0.2, wspace=0.4, right=0.98, top=0.9)
-         #_plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_acorr_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, transparent=True)
+         _plt.savefig("%(od)s/%(dat)s_%(w)d_%(sl)d_acorr_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, transparent=True)
 
