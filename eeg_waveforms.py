@@ -24,9 +24,16 @@ date = "Apr052021_06_00_00"
 #date = "Jan012021_10_00_00"
 #date = "Jan012021_13_00_00"
 #date = "Jan012021_12_00_00"
+date="May262021_14_37_19"
+date="Jun092021_17_57_45"
+date="Jun092021_12_54_23"
+date="Jun092021_13_27_01"
+date="Jun092021_15_22_58"
+date="May262021_15_05_54"
 av   = 1
 
 raw_cvs = True
+edf_file     = False
 show_all = True
 
 zoom   = 1
@@ -52,8 +59,13 @@ elif date == "Mar262021_00_00_00":
 ch_names = ["P3", "C3", "F3", "Fz","F4", "C4", "P4", "Cz", "Pz", "M1", "Fp1", "Fp2", "T3", "T5", "O1", "O2", "F7", "F8", "M2", "T6", "T4"]
 
 if raw_cvs:
-    chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) + 1
-    _dat = _N.genfromtxt("../DSi_dat/%(date)s.csv" % {"date" : date}, delimiter=",")
+    chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) 
+    if edf_file:
+        edf_dat  = mne.io.read_raw_edf("../DSi_dat/%s.edf" % date)
+        _dat = edf_dat.get_data().T
+    else:
+        chs += 1
+        _dat = _N.genfromtxt("../DSi_dat/%(date)s.csv" % {"date" : date}, delimiter=" ")
     d = _N.array((_dat[:, chs]))
     info  = mne.create_info(ch_names, Fs, ch_types="eeg")#, montage="standard_1020")
     raw   = mne.io.RawArray(d.T, info)

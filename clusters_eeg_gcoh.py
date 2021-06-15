@@ -69,7 +69,7 @@ _FINE1 = 3   #
 #dat      = "Jan082020_16_56_08"
 #dat      = "Jan092020_14_55_38"
 #dat     = "Jan092020_14_00_00"#"Apr312020_16_53_03"
-#dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
+dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
 #dat     = "May042020_22_23_04"#"Apr312020_16_53_03"
 #dat     = "May052020_13_00_00"#"Apr312020_16_53_03"
 #dat     = "May052020_21_08_01"
@@ -112,9 +112,18 @@ _FINE1 = 3   #
 #dats = ["Jun092021_17_57_45"]
 #dats=["Jun092021_18_09_37"]
 #dats=["May262021_14_06_30"]
-dats=["May262021_14_37_19"]
+#dats=["May262021_14_06_31"]
+#dats=["May262021_14_37_19"]
+#dats=["May262021_14_37_20"]
+#dats=["Apr052021_17_50_15"]
+# dats=["Apr052021_17_52_50"]
+#dats=["Feb132021_22_16_45"]
+#dats=["Feb132021_23_09_09"]
+#dats=["Feb132021_21_57_27"]
+#dats=["Apr052021_18_01_35"]
+#dats=["Apr052021_18_12_12"]
 #dats = ["May262021_13_18_41"]
-
+#dats=["Feb132021_23_04_43"]
 
 # dats  = ["Jan012019_10_00_00", "Jan012019_11_00_00", 
 #          "Jan012019_12_00_00", "Jan012019_13_00_00",
@@ -136,7 +145,7 @@ _FINE = 1
 
 manual_cluster=False
 armv_ver = 1
-gcoh_ver = 2   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
+gcoh_ver = 4   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
 
 process_keyval_args(globals(), sys.argv[1:])
 win, slideby      = _ppv.get_win_slideby(gcoh_ver)
@@ -146,6 +155,7 @@ hlfOverlap = int((win/slideby)*0.5)
 tr2tr      = False
 str2tr     = "_tr2tr" if tr2tr else ""
 
+clrs       = ["red", "blue", "black", "grey"]
 for dat in dats:
      #s = "../Neurable/DSi_dat/%(dsf)s_artfctrmvd_v%(av)d/%(dsf)s_gcoh_%(wn)d_%(sld)d_v%(av)d%(gv)d.dmp" % {"gf" : rpsm[dat], "dsf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : bin, "sld" : slide}
      #print("!!!!!!!!!!   %s" % s)
@@ -193,7 +203,7 @@ for dat in dats:
 
 
      #frngs = [[7, 15]]
-     frngs = [[32, 48]]
+     frngs = [[7, 15], [32, 48]]
 
      ignore_stored = True
      pcs     = _N.empty(len(frngs))
@@ -220,7 +230,7 @@ for dat in dats:
          iH    = irngs[-1]    
 
          #Apr242020_16_53_03_gcoh_256_64
-         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s%(tr2tr)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n, "tr2tr" : str2tr}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=False, min_var_expld=0.95)
+         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s%(tr2tr)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n, "tr2tr" : str2tr}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=True, min_var_expld=0.95)
          ps = _N.arange(nStates)
          ps += nState_start
          nState_start += nStates
@@ -252,7 +262,7 @@ for dat in dats:
              iS += len(ls)
 
          iS = 0
-         clrs  = ["black", "orange", "blue", "green", "red", "lightblue", "grey", "pink", "yellow", "brown", "cyan", "purple", "black", "orange", "blue", "green", "red", "black", "orange", "blue", "green", "red", "lightblue", "grey", "pink", "yellow", "brown", "cyan", "purple", "black", "orange", "blue", "green", "red"]
+         clrs  = ["black", "blue", "grey", "red", "lightblue", "pink", "yellow", "brown", "cyan", "purple", "black", "orange", "green", "red", "black", "orange", "blue", "green", "red", "lightblue", "grey", "pink", "yellow", "brown", "cyan", "purple", "black", "orange", "blue", "green", "red"]
          W   = L_gcoh
          H   = nChs
          disp_wh_ratio = 3
@@ -323,7 +333,8 @@ for dat in dats:
          _sp.do_skull_plot_all_EVs(all_vecs, ps, ch_names, "%(od)s/%(dat)s_%(w)d_%(sl)d_skull%(tr2tr)s_coh_pattern_%(evn)d_%(1)d_%(2)d_v%(av)d%(gv)d" % {"tr2tr" : str2tr, "1" : fL, "2" : fH, "dat" : dat, "w" : win, "sl" : slideby, "av" : armv_ver, "gv" : gcoh_ver, "od" : outdir, "evn" : ev_n}, dat, fL, fH)
 
          sts = _N.zeros(real_evs.shape[0])
-         fig = _plt.figure(figsize=(12, 9))
+         disp_rows = int(_N.ceil(nStates/3))         
+         fig = _plt.figure(figsize=(12, 3*disp_rows))
 
          SHUFFLES = 100
          maxlags=150
@@ -340,34 +351,40 @@ for dat in dats:
               shf_rmpd_lab[shf] = rl
 
          disp_rows = int(_N.ceil(nStates/3))
+         maxHlvs = 1
          for ns in range(nStates):
              #_plt.subplot2grid((3, nStates//3), (0, ns))
              fig.add_subplot(disp_rows, 3, ns+1)
 
-             for hlvs in range(1):
-                 t0 = hlvs*(L_gcoh//2)
-                 t1 = (hlvs+1)*(L_gcoh//2)
+             for hlvs in range(maxHlvs):
+                 t0 = hlvs*(L_gcoh//maxHlvs)
+                 t1 = (hlvs+1)*(L_gcoh//maxHlvs)
                  for shf in range(SHUFFLES+1):
                      sts[:]=0
                      sts[_N.where(shf_rmpd_lab[shf] == ns)[0]] = 1
                      #_plt.acorr(sts - _N.mean(sts), maxlags=150, usevlines=False, ms=2, color=clr, lw=lw)
                      acfs[shf] = autocorrelate(sts[t0:t1] - _N.mean(sts[t0:t1]), maxlags)
                      acfs[shf, maxlags] = 0
+                     acfs[shf, maxlags-1] = 0
+                     acfs[shf, maxlags+1] = 0
+                     acfs[shf] *= 1.5
                  sACFS = _N.sort(acfs[1:], axis=0)
-                 _plt.plot(_N.arange(-maxlags, maxlags+1), acfs[0] + (1-hlvs)*0.7, color="black", lw=2)
-                 _plt.fill_between(_N.arange(-maxlags, maxlags+1), sACFS[int(SHUFFLES*0.025)] + 0.7*(1-hlvs), sACFS[int(SHUFFLES*0.975)] + 0.7*(1-hlvs), alpha=0.3, color="blue")
+                 _plt.plot(_N.arange(-maxlags, maxlags+1), acfs[0] + (maxHlvs-hlvs-1)*0.7, color=clrs[hlvs], lw=2)
+                 _plt.fill_between(_N.arange(-maxlags, maxlags+1), sACFS[int(SHUFFLES*0.025)] + 0.7*(maxHlvs-hlvs), sACFS[int(SHUFFLES*0.975)] + 0.7*(maxHlvs-hlvs-1), alpha=0.3, color="blue")
 
                  #_plt.xticks([-(Fs/slideby)*15, -(Fs/slideby)*10, -(Fs/slideby)*5, 0, (Fs/slideby)*5, (Fs/slideby)*10, (Fs/slideby)*15], [-15, -10, -5, 0, 5, 10, 15], fontsize=15)   #stroop
                  #_plt.xticks([-(Fs/slideby)*45, -(Fs/slideby)*30, -(Fs/slideby)*15, 0, (Fs/slideby)*15, (Fs/slideby)*30, (Fs/slideby)*45], [-45, -30, -15, 0, 15, 30, 45], fontsize=15)   #RPS
                  _plt.xticks([-(Fs/slideby)*30, -(Fs/slideby)*20, -(Fs/slideby)*10, 0, (Fs/slideby)*10, (Fs/slideby)*20, (Fs/slideby)*30], [-30, -20, -10, 0, 10, 20, 30], fontsize=15)   #RPS
                  _plt.yticks(fontsize=14)
                  #_plt.ylim(-0.08, 0.2)
-                 _plt.ylim(-0.08, 1.4)
+                 #_plt.ylim(-0.08, maxHlvs-1+0.3)
+                 _plt.ylim(-0.2, maxHlvs-1+0.8)
                  #_plt.xlim(-(Fs/slideby)*15, (Fs/slideby)*15)    #  Stroop
                  #_plt.xlim(-(Fs/slideby)*50, (Fs/slideby)*50)    #  RPS
              _plt.xlim(-(Fs/slideby)*30, (Fs/slideby)*30)    #  RPS
              _plt.grid(ls=":")
-             _plt.xlabel("lag (seconds)", fontsize=16)
+             if disp_rows == int(_N.ceil(ns/3)):
+                 _plt.xlabel("lag (seconds)", fontsize=16)
              _plt.ylabel("autocorrelation", fontsize=16)
              _plt.title("pattern %d" % ns)
          _plt.suptitle("%(1)d-%(2)dHz" % {"1" : fL, "2" : fH})

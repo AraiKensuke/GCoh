@@ -25,8 +25,8 @@ chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21
 
 #q20_dat =  _pd.read_csv("Q20_dat/James2.txt", thousands=",", sep="\t", comment="#").to_numpy()
 #q20_dat =  _pd.read_csv("Q20_dat/Sara_RPS_shrt.txt", thousands=",", sep="\t", comment="#").to_numpy()
-q20_dat =  _pd.read_csv("Q20_dat/Mavi_RPS_shrt.txt", thousands=",", sep="\t", comment="#").to_numpy()
-#q20_dat =  _pd.read_csv("Q20_dat/Ali_RPS.txt", thousands=",", sep="\t", comment="#").to_numpy()
+#q20_dat =  _pd.read_csv("Q20_dat/Mavi_RPS_shrt.txt", thousands=",", sep="\t", comment="#").to_numpy()
+q20_dat =  _pd.read_csv("../Q20_dat/Ali_RPS.txt", thousands=",", sep="\t", comment="#").to_numpy()
 
 
 #for ch in range(1, 22):
@@ -59,7 +59,7 @@ dat_25_300[chs] = dat300
 #2021-05-26 14:37:19
 #_N.savetxt("Q20_dat/May262021_13_18_41.csv", dat_25_300.T, fmt=("%.4f "*25))
 #_N.savetxt("Q20_dat/May262021_14_37_19.csv", dat_25_300.T, fmt=("%.4f "*25))
-#_N.savetxt("Q20_dat/May262021_15_05_54.csv", dat_25_300.T, fmt=("%.4f "*25))
-_N.savetxt("Q20_dat/May262021_14_06_30.csv", dat_25_300.T, fmt=("%.4f "*25))
+_N.savetxt("../DSi_dat/May262021_15_05_54.csv", dat_25_300.T, fmt=("%.4f "*25))
+#_N.savetxt("Q20_dat/May262021_14_06_30.csv", dat_25_300.T, fmt=("%.4f "*25))
 
 

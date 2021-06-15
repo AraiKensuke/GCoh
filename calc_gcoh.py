@@ -6,7 +6,8 @@ import pickle
 import os
 import sys
 
-from sumojam.devscripts.cmdlineargs import process_keyval_args
+#from sumojam.devscripts.cmdlineargs import process_keyval_args
+from ka_tools.cmdlineargs import process_keyval_args
 import GCoh.chronux_py.chronux_funcs as _chrf
 import preprocess_ver
 
@@ -25,7 +26,7 @@ elif dataset == datconf._GONOGO:
 elif dataset == datconf._AAFFECT:
     Fs   = 500
 
-#eeg_date_time = "Jan092020_15_05_39"
+eeg_date_times = ["Jan092020_15_05_39"]
 #eeg_date_time = "Jan092020_14_00_00"
 #eeg_date_time = "Jan082020_17_03_48"
 # eeg_date_time = "Aug122020_13_17_39"
@@ -54,8 +55,11 @@ elif dataset == datconf._AAFFECT:
 #eeg_date_times = ["Jan092020_15_05_39"]
 #eeg_date_times = ["May262021_13_18_41"]
 #eeg_date_times = ["May262021_14_06_30"]
-eeg_date_times = ["May262021_14_37_19"]
-#eeg_date_times = ["May262021_15_05_54"]
+#eeg_date_times = ["May262021_14_06_31"]
+#eeg_date_times = ["May262021_14_37_19"]
+#eeg_date_times = ["May262021_14_37_19"]
+#eeg_date_times = ["May262021_14_37_20"]
+eeg_date_times = ["May262021_15_05_54"]
 #eeg_date_times = ["Jun092021_12_31_51"]
 #eeg_date_times  = ["Jun092021_12_54_23"]
 #eeg_date_times = ["Jun092021_15_22_58"]
@@ -65,15 +69,23 @@ eeg_date_times = ["May262021_14_37_19"]
 # eeg_date_times = ["Jun092021_15_35_22"]
 #eeg_date_times  = ["Jun092021_17_57_45"]
 #eeg_date_times  = ["Jun092021_13_27_01"]
+# eeg_date_times=["Apr052021_17_50_15"]
+# eeg_date_times=["Apr052021_17_52_50"]
+# eeg_date_times=["Feb132021_22_16_45"]
+# eeg_date_times=["Feb132021_23_09_09"]
+#eeg_date_times=["Feb132021_21_57_27"]
+#eeg_date_times=["Feb132021_23_04_43"]
+# eeg_date_times=["Apr052021_18_01_35"]
+# eeg_date_times=["Apr052021_18_12_12"]
 artrmv_ver = 1
-gcoh_ver    = 2
+gcoh_ver    = 3
 
 process_keyval_args(globals(), sys.argv[1:])
 
 wnd, slideby      = preprocess_ver.get_win_slideby(gcoh_ver)
 
-cm    = 9
-#cm    = None
+#cm    = 9
+cm    = None
 ch_w_CM, rm_chs, ch_names, ch_types = datconf.getConfig(dataset, sim_nchs=10, cm=cm)
 
 for eeg_date_time in eeg_date_times:

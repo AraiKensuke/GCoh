@@ -35,11 +35,11 @@ def exc_save(exc_list, put_back=False):
     fp.write("low  Hz: %s\n" % str(filt_low))
     fp.write("high Hz: %s\n" % str(filt_high))
 
-    if (bad_chs_inds is not None):
-        _N.savetxt("%(dir)s/bad_chs.dat" % {"dir" : artRmvDir}, bad_chs_inds, fmt="%d")
-    else:
-        if os.access("%(dir)s/bad_chs.dat" % {"dir" : artRmvDir}, os.F_OK):
-           os.unlink("%(dir)s/bad_chs.dat" % {"dir" : artRmvDir})
+    # if (bad_chs_inds is not None):
+    #     _N.savetxt("%(dir)s/bad_chs.dat" % {"dir" : artRmvDir}, bad_chs_inds, fmt="%d")
+    # else:
+    #     if os.access("%(dir)s/bad_chs.dat" % {"dir" : artRmvDir}, os.F_OK):
+    #        os.unlink("%(dir)s/bad_chs.dat" % {"dir" : artRmvDir})
         
     fp.close()
 
@@ -49,7 +49,7 @@ def exc_save(exc_list, put_back=False):
 #fname= "Apr152020_13_00_00"   #  35 seconds    #  15:04:32
 #fname= "Apr182020_13_00_00"   #  35 seconds    #  15:04:32
 #fname= "Jan092020_14_00_00"   #  35 seconds    #  15:04:32
-#fname= "Jan092020_15_05_39"   #  35 seconds    #  15:04:32
+#
 #fname=  "Jan082020_17_03_48"
 #fname=   "Jan082020_16_56_08"
 #fname= "Jan092020_14_55_38"   #  35 seconds    #  15:04:32
@@ -78,9 +78,9 @@ fname= "Apr242020_16_53_03"   #  35 seconds    #  15:04:32
 fname= "May262021_14_06_30"
 fname= "May262021_14_37_19"
 #fname= "May262021_14_37_22"
-#fname= "May262021_15_05_54"
+fname= "May262021_15_05_54"
 #fname= "Jun092021_12_31_51"
-# fname= "Jun092021_12_54_23"
+#fname= "Jun092021_12_54_23"
 # fname= "Jun092021_17_57_45"
 # fname= "Jun092021_15_22_58"
 # fname= "Jun092021_12_42_00"
@@ -88,6 +88,15 @@ fname= "May262021_14_37_19"
 # fname= "Jun092021_18_09_37"
 # fname= "Jun092021_15_35_22"
 # fname= "Jun092021_13_27_01"
+fname="Apr052021_17_50_15"
+fname="Apr052021_17_52_50"
+fname="Apr052021_18_01_35"
+fname="Apr052021_18_12_12"
+#fname="Feb132021_22_16_45"
+#fname="Feb132021_23_09_09"
+fname="Feb132021_21_57_27"
+fname="Feb132021_23_04_43"
+fname= "Jan092020_15_05_39"   #  35 seconds    #  15:04:32
 
 #fname= "TTtest"   #  35 seconds    #  15:04:32  
 
@@ -103,8 +112,8 @@ if not os.access(artRmvDir, os.F_OK):
 #######################################################################
 #edf  = mne.io.read_raw_edf("../DSi_dat/%s.edf" % fname)
 #dAll = edf.get_data().T*10000
-#dAll  = _N.genfromtxt("DSi_dat/%s.csv" % fname, delimiter=',')
-dAll  = _N.loadtxt("Q20_dat/%s.csv" % fname)
+dAll  = _N.genfromtxt("../DSi_dat/%s.csv" % fname, delimiter=',')  # use 
+#dAll  = _N.loadtxt("Q20_dat/%s.csv" % fname)
 #dAll /= 100000
 
 Fs  = 300

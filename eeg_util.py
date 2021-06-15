@@ -407,7 +407,7 @@ def autocorrelate_whatsthisfor(_signal, maxlag, pieces=1, overlap=0):
             AC[pc, maxlag] = 1
             l_use_these.append(pc)
     use_these = _N.array(l_use_these)
-    print(use_these)
+
     if len(use_these) > 0:
         return _N.mean(AC[use_these], axis=0)
     return _N.zeros(maxlag*2+1)
