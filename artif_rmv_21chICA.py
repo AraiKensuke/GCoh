@@ -97,6 +97,21 @@ fname="Apr052021_18_12_12"
 fname="Feb132021_21_57_27"
 fname="Feb132021_23_04_43"
 fname= "Jan092020_15_05_39"   #  35 seconds    #  15:04:32
+fname="Jun162021_13_53_53"
+fname="Jun162021_13_48_41"
+fname="Jun162021_16_49_39"
+fname="Aug122020_12_52_44"
+
+fname="Aug182020_16_02_49"
+fname="Aug182020_16_25_28"
+fname="Aug182020_16_44_18"
+fname= "Jan082020_16_56_08"   #  35 seconds    #  15:04:32
+fname="Aug122020_13_30_23"
+fname="Jun172021_11_59_40"
+fname="Jun172021_12_02_18"
+fname="Jun172021_11_45_56"
+fname="Jun172021_11_48_40"
+fname="Jun172021_11_52_00"
 
 #fname= "TTtest"   #  35 seconds    #  15:04:32  
 
@@ -110,17 +125,17 @@ if not os.access(artRmvDir, os.F_OK):
 
 #######################################################################
 #######################################################################
-#edf  = mne.io.read_raw_edf("../DSi_dat/%s.edf" % fname)
-#dAll = edf.get_data().T*10000
-dAll  = _N.genfromtxt("../DSi_dat/%s.csv" % fname, delimiter=',')  # use 
+edf  = mne.io.read_raw_edf("../DSi_dat/%s.edf" % fname)
+dAll = edf.get_data().T*10000
+#dAll  = _N.genfromtxt("../DSi_dat/%s.csv" % fname, delimiter=',')  # use 
 #dAll  = _N.loadtxt("Q20_dat/%s.csv" % fname)
 #dAll /= 100000
 
 Fs  = 300
 
 #####   All other days except Jul012020_12_00_00
-chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) + 1   # .csv 
-#chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) # edf
+#chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) + 1   # .csv 
+chs = _N.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 21, 22, 23]) # edf
 #chs = _N.arange(21)
 
 d   = _N.array(dAll[:, chs])

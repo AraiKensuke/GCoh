@@ -30,10 +30,19 @@ date="Jun092021_12_54_23"
 date="Jun092021_13_27_01"
 date="Jun092021_15_22_58"
 date="May262021_15_05_54"
+date="Jun162021_13_53_53"
+date="Jun162021_16_49_39"
+date="Jun172021_11_59_40"
+date="Jun172021_12_02_18"
+date="Jun172021_11_45_56"
+date="Jun172021_11_52_00"
+
+#date="Jun162021_13_48_41"
+
 av   = 1
 
 raw_cvs = True
-edf_file     = False
+edf_file     = True
 show_all = True
 
 zoom   = 1

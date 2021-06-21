@@ -69,7 +69,10 @@ _FINE1 = 3   #
 #dat      = "Jan082020_16_56_08"
 #dat      = "Jan092020_14_55_38"
 #dat     = "Jan092020_14_00_00"#"Apr312020_16_53_03"
-dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
+#dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
+#dats     = ["Jun162021_13_53_53"]#"Apr312020_16_53_03"
+dats     = ["Jun172021_11_59_40"]#"Apr312020_16_53_03"
+dats     = ["Jun172021_12_02_18"]
 #dat     = "May042020_22_23_04"#"Apr312020_16_53_03"
 #dat     = "May052020_13_00_00"#"Apr312020_16_53_03"
 #dat     = "May052020_21_08_01"
@@ -110,6 +113,7 @@ dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
 #dats  = ["Jun092021_13_27_01"]
 #######
 #dats = ["Jun092021_17_57_45"]
+#dats=["Jun162021_13_48_41"]
 #dats=["Jun092021_18_09_37"]
 #dats=["May262021_14_06_30"]
 #dats=["May262021_14_06_31"]
@@ -121,6 +125,13 @@ dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
 #dats=["Feb132021_23_09_09"]
 #dats=["Feb132021_21_57_27"]
 #dats=["Apr052021_18_01_35"]
+dats=["Jun162021_16_49_39"]
+dats=["Jun172021_11_59_40"]
+dats     = ["Jun172021_12_02_18"]
+dats=["Jun172021_11_45_56"]
+dats=["Jun172021_11_48_40"]
+dats=["Jun172021_11_52_00"]
+
 #dats=["Apr052021_18_12_12"]
 #dats = ["May262021_13_18_41"]
 #dats=["Feb132021_23_04_43"]
@@ -145,7 +156,7 @@ _FINE = 1
 
 manual_cluster=False
 armv_ver = 1
-gcoh_ver = 4   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
+gcoh_ver = 2   #  bandwidth 7 ver 1, bandwidth 5 ver 2, bandwidth 9 ver 3
 
 process_keyval_args(globals(), sys.argv[1:])
 win, slideby      = _ppv.get_win_slideby(gcoh_ver)
@@ -203,7 +214,7 @@ for dat in dats:
 
 
      #frngs = [[7, 15]]
-     frngs = [[7, 15], [32, 48]]
+     frngs = [[7, 15], [10, 20], [35, 45]]
 
      ignore_stored = True
      pcs     = _N.empty(len(frngs))
@@ -376,9 +387,10 @@ for dat in dats:
                  #_plt.xticks([-(Fs/slideby)*45, -(Fs/slideby)*30, -(Fs/slideby)*15, 0, (Fs/slideby)*15, (Fs/slideby)*30, (Fs/slideby)*45], [-45, -30, -15, 0, 15, 30, 45], fontsize=15)   #RPS
                  _plt.xticks([-(Fs/slideby)*30, -(Fs/slideby)*20, -(Fs/slideby)*10, 0, (Fs/slideby)*10, (Fs/slideby)*20, (Fs/slideby)*30], [-30, -20, -10, 0, 10, 20, 30], fontsize=15)   #RPS
                  _plt.yticks(fontsize=14)
+                 _plt.ylim(-2, 2)
                  #_plt.ylim(-0.08, 0.2)
                  #_plt.ylim(-0.08, maxHlvs-1+0.3)
-                 _plt.ylim(-0.2, maxHlvs-1+0.8)
+                 #_plt.ylim(-0.2, maxHlvs-1+0.8)
                  #_plt.xlim(-(Fs/slideby)*15, (Fs/slideby)*15)    #  Stroop
                  #_plt.xlim(-(Fs/slideby)*50, (Fs/slideby)*50)    #  RPS
              _plt.xlim(-(Fs/slideby)*30, (Fs/slideby)*30)    #  RPS
