@@ -112,6 +112,11 @@ fname="Jun172021_12_02_18"
 fname="Jun172021_11_45_56"
 fname="Jun172021_11_48_40"
 fname="Jun172021_11_52_00"
+fname="Jun222021_11_06_03"
+fname="Jun252021_10_50_53"
+fname="Jun302021_14_51_46"
+fname="Jun252021_10_44_01"
+#fname="Jun302021_10_17_50"
 
 #fname= "TTtest"   #  35 seconds    #  15:04:32  
 

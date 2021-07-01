@@ -69,10 +69,10 @@ _FINE1 = 3   #
 #dat      = "Jan082020_16_56_08"
 #dat      = "Jan092020_14_55_38"
 #dat     = "Jan092020_14_00_00"#"Apr312020_16_53_03"
-#dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
+dats     = ["Jan092020_15_05_39"]#"Apr312020_16_53_03"
 #dats     = ["Jun162021_13_53_53"]#"Apr312020_16_53_03"
-dats     = ["Jun172021_11_59_40"]#"Apr312020_16_53_03"
-dats     = ["Jun172021_12_02_18"]
+#dats     = ["Jun172021_11_59_40"]#"Apr312020_16_53_03"
+#dats     = ["Jun172021_12_02_18"]
 #dat     = "May042020_22_23_04"#"Apr312020_16_53_03"
 #dat     = "May052020_13_00_00"#"Apr312020_16_53_03"
 #dat     = "May052020_21_08_01"
@@ -125,12 +125,13 @@ dats     = ["Jun172021_12_02_18"]
 #dats=["Feb132021_23_09_09"]
 #dats=["Feb132021_21_57_27"]
 #dats=["Apr052021_18_01_35"]
-dats=["Jun162021_16_49_39"]
-dats=["Jun172021_11_59_40"]
-dats     = ["Jun172021_12_02_18"]
-dats=["Jun172021_11_45_56"]
-dats=["Jun172021_11_48_40"]
-dats=["Jun172021_11_52_00"]
+# dats=["Jun162021_16_49_39"]
+# dats=["Jun172021_11_59_40"]
+# dats     = ["Jun172021_12_02_18"]
+# dats=["Jun172021_11_45_56"]
+# dats=["Jun172021_11_48_40"]
+# dats=["Jun172021_11_52_00"]
+# dats=["Jun222021_11_06_03"]
 
 #dats=["Apr052021_18_12_12"]
 #dats = ["May262021_13_18_41"]
@@ -148,6 +149,8 @@ dats=["Jun172021_11_52_00"]
 # dat="Dec102020_17_22_55"
 # dat="Dec102020_17_27_01"
 # dat="Dec102020_18_13_33"
+dats=["Jun252021_10_50_53"]
+dats=["Jun302021_14_51_46"]
 
 #bin     = 512
 #slide   = 64
@@ -213,8 +216,10 @@ for dat in dats:
      fs = lm["fs"]
 
 
-     #frngs = [[7, 15]]
-     frngs = [[7, 15], [10, 20], [35, 45]]
+     frngs = [[7, 15]]
+     #frngs = [[4, 8]]
+     #frngs = [[7, 15], [10, 20], [35, 45]]
+     #frngs = [[35, 45]]
 
      ignore_stored = True
      pcs     = _N.empty(len(frngs))
@@ -241,7 +246,7 @@ for dat in dats:
          iH    = irngs[-1]    
 
          #Apr242020_16_53_03_gcoh_256_64
-         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s%(tr2tr)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n, "tr2tr" : str2tr}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=True, min_var_expld=0.95)
+         nStates, rmpd_lab = find_or_retrieve_GMM_labels(dataset, dat, "%(gf)s%(tr2tr)s_gcoh%(evn)d_%(wn)d_%(sld)d_v%(av)d%(gv)d" % {"gf" : dat, "av" : armv_ver, "gv" : gcoh_ver, "wn" : win, "sld" : slideby, "evn" : ev_n, "tr2tr" : str2tr}, real_evs, iL, iH, fL, fH, armv_ver, gcoh_ver, which=0, try_K=try_Ks, TRs=TRs, ignore_stored=ignore_stored, manual_cluster=manual_cluster, do_pca=False, min_var_expld=0.95)
          ps = _N.arange(nStates)
          ps += nState_start
          nState_start += nStates
@@ -362,7 +367,7 @@ for dat in dats:
               shf_rmpd_lab[shf] = rl
 
          disp_rows = int(_N.ceil(nStates/3))
-         maxHlvs = 1
+         maxHlvs = 3
          for ns in range(nStates):
              #_plt.subplot2grid((3, nStates//3), (0, ns))
              fig.add_subplot(disp_rows, 3, ns+1)
@@ -387,9 +392,9 @@ for dat in dats:
                  #_plt.xticks([-(Fs/slideby)*45, -(Fs/slideby)*30, -(Fs/slideby)*15, 0, (Fs/slideby)*15, (Fs/slideby)*30, (Fs/slideby)*45], [-45, -30, -15, 0, 15, 30, 45], fontsize=15)   #RPS
                  _plt.xticks([-(Fs/slideby)*30, -(Fs/slideby)*20, -(Fs/slideby)*10, 0, (Fs/slideby)*10, (Fs/slideby)*20, (Fs/slideby)*30], [-30, -20, -10, 0, 10, 20, 30], fontsize=15)   #RPS
                  _plt.yticks(fontsize=14)
-                 _plt.ylim(-2, 2)
+                 #_plt.ylim(-2, 2)
                  #_plt.ylim(-0.08, 0.2)
-                 #_plt.ylim(-0.08, maxHlvs-1+0.3)
+                 _plt.ylim(-0.08, maxHlvs-1+0.3)
                  #_plt.ylim(-0.2, maxHlvs-1+0.8)
                  #_plt.xlim(-(Fs/slideby)*15, (Fs/slideby)*15)    #  Stroop
                  #_plt.xlim(-(Fs/slideby)*50, (Fs/slideby)*50)    #  RPS

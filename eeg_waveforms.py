@@ -36,17 +36,22 @@ date="Jun172021_11_59_40"
 date="Jun172021_12_02_18"
 date="Jun172021_11_45_56"
 date="Jun172021_11_52_00"
+date="Jun222021_11_06_03"
+date="Jun252021_10_50_53"
+date="Jun302021_14_51_46"
+date="Jun252021_10_44_01"
+date="Jun302021_10_17_50"
 
 #date="Jun162021_13_48_41"
 
-av   = 1
+av   = 1             #  artifact remove version
 
-raw_cvs = True
+raw_cvs = True       #  if want to view raw cvs (or edf file) w/o artifact removal done
 edf_file     = True
-show_all = True
+show_all = True      #  show entire recording
 
 zoom   = 1
-Fs     = 300
+Fs     = 300         #  sampling frequency
 #dT     = 10000
 
 if date == "Mar162021_07_00_00":

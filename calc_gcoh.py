@@ -51,35 +51,17 @@ elif dataset == datconf._AAFFECT:
 #                    "Jan012019_12_00_00", "Jan012019_13_00_00",
 #                    "Jan012019_14_00_00", "Jan012019_15_00_00"]
 
-eeg_date_times = ["Jun162021_13_53_53"]
-eeg_date_times=["Jun162021_13_48_41"]
-eeg_date_times=["Jun162021_16_49_39"]
-eeg_date_times=["Aug122020_12_52_44"]
-eeg_date_times=["Aug182020_16_02_49"]
-eeg_date_times=["Aug182020_16_25_28"]
-eeg_date_times=["Aug182020_16_44_18"]
-eeg_date_times=["Aug122020_13_30_23"]
-eeg_date_times=["Jan082020_16_56_08"]
-eeg_date_times=["Jun172021_11_59_40"]
-eeg_date_times=["Jun172021_12_02_18"]
-eeg_date_times=["Jun172021_11_45_56"]
-eeg_date_times=["Jun172021_11_48_40"]
-eeg_date_times=["Jun172021_11_52_00"]
+eeg_date_times = ["Jun162021_13_53_53", "Jun162021_13_48_41", "Jun162021_16_49_39","Aug122020_12_52_44", "Aug182020_16_02_49", "Aug182020_16_25_28", "Aug182020_16_44_18", "Aug122020_13_30_23", "Jan082020_16_56_08"]
+#eeg_date_times=["Jun172021_11_59_40", "Jun172021_12_02_18", "Jun172021_11_45_56", "Jun172021_11_48_40", "Jun172021_11_52_00", "Jun222021_11_06_03", "Jan092020_15_05_39"]
 
 #eeg_date_times = ["Jan092020_15_05_39"]
-#eeg_date_times = ["May262021_13_18_41"]
-#eeg_date_times = ["May262021_14_06_30"]
-#eeg_date_times = ["May262021_14_06_31"]
-#eeg_date_times = ["May262021_14_37_19"]
-#eeg_date_times = ["May262021_14_37_19"]
-#eeg_date_times = ["May262021_14_37_20"]
-#eeg_date_times = ["May262021_15_05_54"]
-#eeg_date_times = ["Jun092021_12_31_51"]
-#eeg_date_times  = ["Jun092021_12_54_23"]
-#eeg_date_times = ["Jun092021_15_22_58"]
-# eeg_date_times = ["Jun092021_12_42_00"]
-# eeg_date_times = ["Jun092021_13_06_34"]
-# eeg_date_times = ["Jun092021_18_09_37"]
+
+eeg_date_times = ["May262021_13_18_41", "May262021_14_06_30", "May262021_14_37_19", "May262021_15_05_54", "Jun092021_12_31_51", "Jun092021_12_54_23", "Jun092021_17_57_45", "Jun092021_13_27_01", "Aug182020_15_45_27"]
+eeg_date_times = ["Jun252021_10_50_53"]
+
+eeg_date_times = ["Jun302021_14_51_46"]
+
+                  
 # eeg_date_times = ["Jun092021_15_35_22"]
 #eeg_date_times  = ["Jun092021_17_57_45"]
 #eeg_date_times  = ["Jun092021_13_27_01"]
@@ -92,14 +74,14 @@ eeg_date_times=["Jun172021_11_52_00"]
 # eeg_date_times=["Apr052021_18_01_35"]
 # eeg_date_times=["Apr052021_18_12_12"]
 artrmv_ver = 1
-gcoh_ver    = 2
+gcoh_ver    = 2    #  assign a version number for GCoh calculation here.
 
 process_keyval_args(globals(), sys.argv[1:])
 
 wnd, slideby      = preprocess_ver.get_win_slideby(gcoh_ver)
 
-#cm    = 9
-cm    = None
+#cm    = 9     #  this is when using Q20
+cm    = None   #  this is when using DSi
 ch_w_CM, rm_chs, ch_names, ch_types = datconf.getConfig(dataset, sim_nchs=10, cm=cm)
 
 for eeg_date_time in eeg_date_times:
