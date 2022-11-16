@@ -63,7 +63,8 @@ def windowed_gcoh(Fs, wnd, slideby, X_cm, ch_w_ref, ch_picks, info, dpss_bw=7, d
         t1 = t0 + wnd
 
         X[0, t0:t1]
-        print("%(0)d  %(1)d" % {"0" : t0, "1" : t1})
+        if ni % 20 == 0:
+            print("win %(0)d of %(1)d" % {"0" : ni, "1" : n_bins})
 
         csd = mtf.csd_multitaper(epochs, tmin=(t0/Fs), tmax=(t1/Fs), fmin=fMin, fmax=fMax, n_fft=wnd, bandwidth=dpss_bw, adaptive=False, low_bias=True, projs=None, n_jobs=1, verbose=False)
 
