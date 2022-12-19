@@ -40,11 +40,11 @@ def AR1(tau, N, dt):
     xc /= _N.std(xc)
     return xc
 
-def mix(dt, EEG, rhy, pkn, grp, rel_phase, t0_sec, t1_sec):
+def mix(dt, EEG, rhy, grp, rel_phase, t0_sec, t1_sec):
     nInGrp = len(grp)
 
     for nIG in range(1, nInGrp):
-        EEG[grp[nIG], int(t0_sec/dt)+rel_phase[nIG]:int(t1_sec/dt)+rel_phase[nIG]] = EEG[grp[0], int(t0_sec/dt):int(t1_sec/dt)] 
+        EEG[grp[nIG], int(t0_sec/dt)+rel_phase[nIG]:int(t1_sec/dt)+rel_phase[nIG]] += rhy[grp[0], int(t0_sec/dt):int(t1_sec/dt)] 
 
 def generate_artfctrmvd_filename():
     month_str = ["Jan","Feb", "Mar", "Apr", "May", "Jun",
