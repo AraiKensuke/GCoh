@@ -8,4 +8,4 @@ Here :point_right:
 
 If you have an EDF file from DSi-21, go here:
 
-<A href="https://colab.research.google.com/github/AraiKensuke/GCoh/blob/master/cluster_eeg_gcoh.ipynb">GCoh analysis on EEG</A>
+<A href="https://colab.research.google.com/github/AraiKensuke/GCoh/blob/Include_dpss_bw_in_preprocessver/cluster_eeg_gcoh.ipynb">GCoh analysis on EEG</A>
